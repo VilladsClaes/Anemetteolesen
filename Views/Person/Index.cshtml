@@ -1,0 +1,135 @@
+﻿@model IEnumerable<Anemette.Models.tblPerson>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NavnTilPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TelefonnummerTilPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmailTilPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BilledeAfPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RSVP)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SamtykkeTilDenneListe)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MedlemsskabAfForetagsomheden)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BidragTilAuktionen)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BidragTilSneglebingo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BidragTilForberedelse)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Salt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HashetLink)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AlderAfPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LoebeDistanceForPerson)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.tblBillet.BilletType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.tblEventRegion.Region)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.tblSted.HvorKenderViPersonenFra)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.tblTjan.TjansUnderEvent)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.NavnTilPerson)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TelefonnummerTilPerson)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmailTilPerson)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BilledeAfPerson)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RSVP)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SamtykkeTilDenneListe)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MedlemsskabAfForetagsomheden)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BidragTilAuktionen)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BidragTilSneglebingo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BidragTilForberedelse)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Salt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HashetLink)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AlderAfPerson)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LoebeDistanceForPerson)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tblBillet.BilletType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tblEventRegion.Region)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tblSted.HvorKenderViPersonenFra)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tblTjan.TjansUnderEvent)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,207 @@
+﻿@model Anemette.Models.SoegeViewModel
+@* Brug Viewmodel istedet for alm Model *@
+@* The code changes made to this file are simple but significant. The first change, @model BabyStore. ViewModels.ProductIndexViewModel, simply tells the view to use ProductIndexViewModel as the model on which to base the view. Note that this is now a single class and not an enumeration.*@
+@*@model IEnumerable<Anemette.Models.tblProdukt>*@
+@*//is the model that the view is based on. The Index method of the CategoriesController class passes a list of categories to the Index view. In this case, the view needs to display a list of categories to the user so the model is specified as a collection of categories that implements the IEnumerable interface (the List type implements this).*@
+
+@using PagedList.Mvc
+
+
+@{
+    ViewBag.Title = "Produkter i min butik";
+}
+
+@*<h2>@ViewBag.Title</h2>*@
+
+@* This code uses the ?: (also known as ternary) operator to check if the search term is null or made up of whitespace. If this is true, the output of the code will be “Showing all xx products” or else if the user has entered a search term, the output will be “Your search for search term found xx products”. In effect, this operates as a shorthand if statement. More information on the ?: operator can be found at https://msdn.microsoft.com/en-gb/library/ty67wk28.aspx. *@
+@*@(String.IsNullOrWhiteSpace(Model.Soegning) ? "Viser alle" : "Søgning på " +
+    Model.Soegning + " fandt") @Model.Produkts.TotalItemCount produkter*@
+
+<p>
+    @*@Html.ActionLink("Opret nyt produkt", "OpretProdukt")*@
+    @* Filtrer på kategori *@
+    @* the Index method of the ProductsController class. For example, submitting the form to filter to Feeding after it has previously been set to Sleeping generates the following URL: http://localhost:58735/Products/Sleeping?Category=Feeding&SortBy=&Search=.
+        This URL contains two category arguments—Sleeping and Feeding—so the web site simply filters by the first one it encounters and the products list remains filtered to the Sleeping category. The Sleeping category must be removed when the form is submitted. In order to fix this issue, the HTML form containing the category filter needs to use the ProductsIndex route, which will enable it to remove all the parameters currently prefixed to the URL and only target the Index action method with the parameters submitted by the form. *@
+    @*@using (Html.BeginForm("Index", "Produkt", FormMethod.Get))*@
+    @using (Html.BeginRouteForm("ProduktOversigt", FormMethod.Get))
+    {
+        @*<label>Filtrér på kategori:</label>*@
+        //Gør brug af Viewmodel
+        //The second change, @Html.DropDownListFor(vm => vm.Category, Model.CatFilterItems, “All”);, generates a filter control based on the CatFilterItems property of the view model as per the second parameter.
+        //The first parameter, vm => vm.Category, specifies the HTML name of the control and hence what it will appear as in the query string section of the URL when the form is submitted.
+        //Since the name of the control is category, our previous code that looks for the category parameter in the URL will continue to work correctly.
+        @*@Html.DropDownListFor(vm => vm.Kategori, Model.KategoriFiltrering, "Alle kategorier");*@
+
+        @*@Html.DropDownList("Kategori", "Alle kategorier")*@
+
+   
+        @*foreach (var item in Model.KategoriTaellers)
+        {
+            //Produkter baseret på kategori
+            <button type="button" class="btn btn-outline-primary">@Html.ActionLink(item.KategoriMedTaeller, "Index", "Produkt", new { category = item.KategoriNavn }, null)</button>
+          
+            //Med routing vil linket være <li>@Html.RouteLink(“En eller anden kategori”, “ProdukterInddeltEfterKategori”, new {category = “En eller anden kategori”})</li>.
+
+        }*@
+
+ 
+
+     
+
+
+
+        //This new select control uses the SortBy property from the view model as its name.It populates itself with the data from the view model's Sorts property using the second entry in each line of the dictionary as the value submitted by the control (specified by “Value”) and the first entry in each line as the text displayed to the user (specified by “Key”), as shown in Figure 5-2.
+        <label>Sortér:</label>
+        @Html.DropDownListFor(vm => vm.SorterEfter, new SelectList(Model.SorteringsMuligheder, "Value", "Key"), "Default")
+
+        <input type="submit" value="Filter" />
+        // A hidden HTML element is also included to hold the value of the current search term. It's resubmitted so that the search term originally entered by the user is preserved when the products are filtered by category.
+        @*<input type="hidden" name="Search" id="Search" value="@ViewBag.Search" />*@
+        //The third change ensures that the hidden search control now references the view model instead of the ViewBag:
+        <input type="hidden" name="Search" id="Search" value="@Model.Soegning" />
+    }
+</p>
+<table class="table table-striped table-responsive-sm">
+    <thead class="thead-dark">
+        <tr>
+
+            @*<th>
+                @Html.DisplayNameFor(model => model.Kategori)
+            </th>*@
+
+
+            <th scope="col" class="priority-3">
+                @* We then need to generate the table headings. This is not as straightforward as it appears because the DisplayNameFor HTML helper method does not work with collections and we want to display headings based on the Products property of the view model. The category heading is straightforward since this is a property of the view model, but to display, for example, the name of the description property of the product class, we cannot now use code such as @Html.DisplayNameFor(model => model.Products. Description). Instead, we need to force the helper to use an actual product entity from the products collection by using the First() method as follows: *@
+                @*@Html.DisplayNameFor(model => model.Produkts.First().Navn)*@
+
+            </th>
+
+            <th scope="col" class="priority-2">
+                @Html.DisplayNameFor(model => model.Produkts.First().Beskrivelse)
+            </th>
+
+            <th scope="col" class="priority-1">
+                @Html.DisplayNameFor(model => model.Produkts.First().Pris)
+            </th>
+
+            <th scope="col" class="priority-4">
+                @Html.DisplayNameFor(model => model.Produkts.First().Antal)
+            </th>
+
+            <th scope="col" class="priority-2">
+                Billede
+            </th>
+            @if (@Session["LoginBruger"] != null)
+            {
+                <th scope="col" class="priority-1">
+                    Administration
+                </th>
+            }
+
+        </tr>
+    </thead>
+    @* KUN BØGER-kategorien *@
+<tbody>
+    @foreach (var item in Model.Produkts.Where(b => b.FK_ProductCategoryID == 1))
+    {
+
+        <tr>
+            @* Kategori *@
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.tblProduktKategori.Kategori)
+                </td>*@
+
+            @* Navn *@
+            <th scope="row"  class="priority-3">
+                @if (item.Antal == 0)
+                {
+                    <span class="text-danger">
+                        @Html.DisplayFor(modelItem => item.Navn) er UDSOLGT
+                    </span>
+                }
+                else
+                {
+
+                    <a id="btn_add" href="@Url.Action("TilfojKurv", "Home",item)" class="btn btn-info btn-info">Køb @Html.DisplayFor(modelItem => item.Navn) </a>
+
+
+
+                }
+
+
+            </th>
+
+            @* Beskrivelse *@
+            <td  class="priority-2">
+                @Html.DisplayFor(modelItem => item.Beskrivelse)
+            </td>
+
+            @* Pris *@
+            <td class="priority-1">
+                @Html.DisplayFor(modelItem => item.Pris),- kr
+            </td>
+
+            @* Antal *@
+            <td class="priority-4">
+                @if (item.Antal == 0)
+                {
+                    <span class="text-danger">
+                        UDSOLGT
+                    </span>
+                }
+                else
+                {
+                    <p><span class="text-info">@Html.DisplayFor(modelItem => item.Antal) </span> tilbage</p>
+                }
+
+            </td>
+
+            @* Billede *@
+        <td class="priority-2">
+            @if (item.tblBilledes.Where(b => b.FK_Produkt == item.ID).Any())
+            {
+                if (item.Antal > 0)
+                {
+                    <a href="@Url.Action("TilfojKurv", "Home",item)">
+                        <img src="@(Url.Content(Konstanter.BilledemappeSti) + item.tblBilledes.Where(b => b.FK_Produkt == item.ID).FirstOrDefault().BilledeFil)" width="200" alt="Billede af @item.tblBilledes.Where(b => b.FK_Produkt == item.ID).FirstOrDefault().BilledeAlternativTekst" />
+                    </a>
+                }
+                else
+                {
+                    <img src="@(Url.Content(Konstanter.BilledemappeSti) + item.tblBilledes.Where(b => b.FK_Produkt == item.ID).FirstOrDefault().BilledeFil)" width="200" alt="Billede af @item.tblBilledes.Where(b => b.FK_Produkt == item.ID).FirstOrDefault().BilledeAlternativTekst" />
+
+                }
+
+            }
+            else
+            {
+                <p>Der er intet billede</p>
+            }
+        </td>
+
+            @* Handlinger *@
+            @if (@Session["LoginBruger"] != null)
+            {
+                <td class="priority-1">
+                    @Html.ActionLink("Ændr", "EditProdukt", new { id = item.ID }) |
+                    @Html.ActionLink("Detaljevisning", "Details", new { id = item.ID }) |
+                    @Html.ActionLink("Slet", "Delete", new { id = item.ID })
+                </td>
+            }
+
+        </tr>
+    }
+</tbody>
+
+</table>
+<div>
+    Side @(Model.Produkts.PageCount < Model.Produkts.PageNumber ? 0 : Model.Produkts.PageNumber) af @Model.Produkts.PageCount
+        @* The next line of code uses the HTML PagedListPager helper that comes as part of the PagedList. Mvc namespace. This helper takes the list of products and produces a hyperlink to each page. Url.Action is used to generate a hyperlink targeting the Index view containing the page parameter. We have added an anonymous type to the helper method in order to pass the current category, search, and sort order to the helper so that each page link contains these in its querystring. This means that the search term, chosen category, and sort order are all preserved when moving from one page to another. Without them, the list of products would be reset to show all the products. *@
+        @Html.PagedListPager(Model.Produkts, side => Url.Action("Index", new
+                {
+                  category = @Model.Kategori,
+                  Search = @Model.Soegning,
+                  sortBy = @Model.SorterEfter,
+                  side
+                }))
+    </div>

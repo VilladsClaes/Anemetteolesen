@@ -1,0 +1,72 @@
+﻿
+@{
+    
+    Anemette.Models.DatabaseEntities db = new Anemette.Models.DatabaseEntities();
+}
+
+
+
+    <div class="row">
+       
+
+        @* Store knapper til sider *@
+        <div class="card-deck">
+
+            @* __________________________________________BOG PÅ FORSIDEN_______________________________________ *@
+            <div class="card">
+                @{
+                    //Tilfældig bog; fremhævning
+                    Anemette.Models.tblProdukt RandomBog = new Anemette.Models.tblProdukt();
+                    RandomBog = db.tblProdukts.Where(j => j.tblProduktKategori.ID == 1 && j.Navn.Length > 2 || j.Antal.Value > 0).OrderBy(j => Guid.NewGuid()).FirstOrDefault();
+                }
+                @if (RandomBog.tblBilledes.Where(b => b.FK_Produkt == RandomBog.ID).Any())
+                {
+                    <img class="card-img-top " src="~/Uploads/@RandomBog.tblBilledes.Where(b => b.FK_Produkt == RandomBog.ID).FirstOrDefault().BilledeFil" alt="Card image cap">
+
+                }
+                else
+                {
+                    <img class="card-img-top" src="~/Uploads/ingenbillede.svg" alt="Der mangler et billede til dette produkt">
+                }
+                <div class="card-body">
+                    <h5 class="card-title">
+                        @RandomBog.Navn
+                        @Html.ActionLink("Køb denne bog", "TilfojKurv", "Home", RandomBog, htmlAttributes: new { @class = "btn btn-info btn-info" })
+                    </h5>
+                    <p class="card-text">
+                        @RandomBog.Beskrivelse
+                    </p>
+                </div>
+                <div class="card-footer">
+
+                    @{
+
+
+                        var antalBoger = db.tblProdukts.Where(boger => boger.FK_ProductCategoryID == 1).Count();
+
+
+
+                    }
+                    <small class="text-muted">Ialt @antalBoger produkter</small>
+                </div>
+            </div>
+
+            @* __________________________________________Artikel PÅ FORSIDEN_______________________________________ *@
+            <div class="card">
+           
+               
+                    @Html.Action("_OmAnemette", "Home")
+              
+
+            </div>
+            
+        </div>
+
+
+        
+
+
+    </div>
+
+
+

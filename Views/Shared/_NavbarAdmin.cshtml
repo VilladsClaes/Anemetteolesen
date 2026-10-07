@@ -1,0 +1,36 @@
+﻿<nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        </button>
+        @Html.ActionLink("Anemette Olesen", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    <div class="navbar-collapse collapse" id="navbarSupportedContent">
+        <ul class="nav navbar-nav mr-auto">
+            @* Links til undersider: Liste over produkter og liste over events *@
+            @*<li>@Html.ActionLink("Produkter", "Index", "Produkt", null, new { @class = "btn btn-info" })</li>*@
+            <li>@Html.RouteLink("Produkter", "ProduktOversigt", null, new { @class = "btn btn-info" })</li>
+            <li>@Html.ActionLink("Kurser", "Index", "Event", null, new { @class = "btn btn-info" })</li>
+          
+
+        </ul>
+        @* Søgeformular *@       
+        @using (Html.BeginRouteForm("ProduktOversigt", FormMethod.Get, new { @class = "navbar-form navbar-left" }))
+        {
+            <div class="form-group">
+                @Html.TextBox("Search", null, new
+                {
+                    @class = "form-control",
+                    @placeholder
+                    = "Søg på produkter"
+                })
+            </div>
+            <button type="submit" class="btn btn-light">Søg</button>
+        }
+
+        @*<ul class="nav navbar-nav navbar-right mr-auto">
+            <li class="nav-item"><a href="/Account/Register" id="registerLink" class="nav-link">Register</a></li>
+            <li class="nav-item"><a href="/Account/Login" id="loginLink" class="nav-link">Log in</a></li>
+        </ul>*@
+
+    </div>
+    </div>
+</nav>

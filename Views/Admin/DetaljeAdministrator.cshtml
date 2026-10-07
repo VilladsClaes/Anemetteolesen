@@ -1,0 +1,50 @@
+﻿@model Anemette.Models.tblAdmin
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Detaljer for denne administrator</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Brugernavn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Brugernavn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Salt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Salt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrugerEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrugerEmail)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Ændr denne profil", "EditerAdministrator", new { id = Model.ID }) |
+    @Html.ActionLink("Tilbage til Administrationspanelet", "Index")
+</p>

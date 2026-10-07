@@ -1,0 +1,75 @@
+﻿@model Anemette.Models.tblAdmin
+
+@{
+    ViewBag.Title = "Opret en administrator";
+}
+
+
+<div class="container p-5 bg-light text-center mt-5">
+
+
+    <h2>Create</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>@ViewBag.Title</h4>
+            <span>@TempData["Oprettet"]</span>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @* Brugernavn til Administrator *@
+            <div class="form-group">
+                @Html.LabelFor(model => model.Brugernavn, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Brugernavn, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Brugernavn, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @* Angiv password *@
+            <div class="form-group">
+                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" }, placeholder = "Password", @type = "password" })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            
+
+            @* Angiv Emailadresse *@
+            <div class="form-group">
+                @Html.LabelFor(model => model.BrugerEmail, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.BrugerEmail, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.BrugerEmail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+
+
+
+</div>
+
+@* Dette script skal bruges for at lave validering af jQuery *@
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

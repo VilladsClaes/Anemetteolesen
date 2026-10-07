@@ -1,0 +1,36 @@
+﻿@model Anemette.Models.ViewModel
+@* ------------------------------------------EVENT PÅ FORSIDEN ------------------------------ *@
+<div class="card">
+    @{
+
+        var nextEvent = Model.Events.Where(j => j.EventDato.Value > DateTime.Now).OrderBy(p => p.EventDato.Value).FirstOrDefault();
+        var AntalPladserOptaget = Model.DeltagerTilmeldings.Where(j => j.FK_Event == nextEvent.ID).ToList().Count;
+        var AntalPladserIAlt = nextEvent.EventPladser.Value;
+        var AntalPladserTilbage = AntalPladserIAlt - AntalPladserOptaget;
+
+
+    }
+    @if (Model.Billeder.Where(b => b.FK_Produkt == nextEvent.ID).Any())
+    {
+        <img class="card-img-top" src="~/Uploads/Thumbnails/@nextEvent.tblBilledes.Where(b => b.FK_Event == nextEvent.ID).FirstOrDefault().BilledeFil" alt="Billede af @nextEvent.tblBilledes.Where(b => b.FK_Event == nextEvent.ID).FirstOrDefault().BilledeAlternativTekst" />
+
+    }
+    else
+    {
+        <img class="card-img-top" src="~/Uploads/ingenbillede.svg" />
+    }
+
+    <div class="card-body">
+
+        <h5 class="card-title">@nextEvent.EventOverskrift</h5>
+        <p class="card-text">
+            @nextEvent.EventBeskrivelse
+        </p>
+    </div>
+    <div class="card-footer">
+
+        <small class="text-muted">Der er @AntalPladserTilbage pladser tilbage</small>
+
+        @*<small class="text-muted">Der er @AntalPladserOptaget tilmeldte ud af @AntalPladserIAlt pladser</small>*@
+    </div>
+</div>

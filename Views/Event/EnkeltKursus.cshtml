@@ -1,0 +1,115 @@
+﻿@model Anemette.Models.tblEvent
+
+
+    <div>
+        <h4>Dette kursus</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.EventOverskrift)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventOverskrift)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventDato)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventDato)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventBeskrivelse)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventBeskrivelse)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventPris)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventPris)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventPladser)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventPladser)
+            </dd>
+
+            @* Hvem er tilmeldte *@
+            <dt>Tilmeldte</dt>
+            <dd>
+                @foreach (var item in Model.tblTilmeldings.Where(b => b.FK_Event == Model.ID))
+                {
+                    //Hvis man gerne vil have en liste over personer kan vi lave en PersonController hvor man kan slå personer op via FK_Person
+                    @*@Html.ActionLink("Se mere om denne person", "SePerson", new { id = item.ID })*@ 
+                    @item.TilmeldteEmail
+                }
+
+            </dd>
+
+            @* Hvilke billeder er knyttet til eventet *@
+            <dt>Billede</dt>
+            <dd>
+                @foreach (var item in Model.tblBilledes.Where(b => b.FK_Event == Model.ID))
+                {
+                    <img src="~/Uploads/@item.BilledeFil" alt="Billede af @item.BilledeAlternativTekst" />
+                    <img src="~/Uploads/Thumbnails/@item.BilledeFil" alt="Billede af @item.BilledeAlternativTekst" />
+                }
+
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventDistance)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventDistance)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.tblEventRegion.Region)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.tblEventRegion.Region)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.tblSponsor.SponsorNavn)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.tblSponsor.SponsorNavn)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.tblType.Type)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.tblType.Type)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Ændr", "EditKursus", new { id = Model.ID }) |
+        @Html.ActionLink("Tilbage til listen", "Index") |
+        @using (Html.BeginForm("SletKursus", "Event", new { id = Model.ID }, FormMethod.Post))
+        {
+
+            <button>Slet dette kursus</button>
+
+        }
+        @Html.ActionLink("Slet dette kursus", "SletKursus", new { id = Model.ID })
+    </p>

@@ -1,0 +1,31 @@
+﻿@model Anemette.Models.tblAdmin
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="container p-5 bg-light text-center mt-5">
+    <form action="/Home/Login" method="post" class="border px-5 py-3">
+        @* Her kommer beskeder fra controlleren til viewet *@
+        <span class="alert-info p-2">@ViewBag.Besked</span>
+        <div>
+            <label for="BrugerNavn">Brugernavn til Admin</label> <br />
+            <input type="text" name="BrugerNavn" value="" id="BrugerNavn" class="form-control rounded-0" />
+        </div>
+        <div>
+            <label for="Password">Kodeord til Admin</label> <br />
+            <input type="password" name="Password" value="" id="Password" class="form-control rounded-0" />
+        </div>
+
+        <input class="btn btn-dark btn-lg rounded-0 mt-3 my-4" type="submit" value="Log ind" />
+        <div>
+            <a class="btn btn-dark btn-sm rounded-0 mt-3 my-4" href="/Home">Fortryd og gå til forsiden</a>
+            @* Man skal ikke kunne oprette en bruger, men funktionen kan nemt slåes til for at vise Hashing af password osv *@
+            @*<a class="btn btn-dark btn-sm rounded-0 mt-3 my-4" href="/Login/OpretBruger">Opret Bruger</a>*@
+
+        </div>
+    </form>
+    @Html.ActionLink("Opret ny bruger", "OpretAdministrator","Admin")
+</div>
+
+

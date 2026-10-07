@@ -1,0 +1,127 @@
+﻿@model Anemette.Models.ViewModel
+
+@{
+    ViewBag.Title = "PlacerOrdre";
+
+    Anemette.Models.DatabaseEntities db = new Anemette.Models.DatabaseEntities();
+    var kurven = Session["cart"] as List<Anemette.Models.tblProdukt>;
+    
+    
+
+}
+
+<h2>PlacerOrdre</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Du er ved at foretage en bestilling</h4>
+
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+   
+        @* Kundens navn hvis vi ikke kender det *@
+        <div class="form-group">
+            @Html.LabelFor(model => model.Person.NavnTilPerson, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Person.NavnTilPerson, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Person.NavnTilPerson, "", new { @class = "text-danger" })
+            </div>
+        </div>
+   
+
+        @* Kundens telefonnummer *@
+        <div class="form-group">
+            @Html.LabelFor(model => model.Person.TelefonnummerTilPerson, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Person.TelefonnummerTilPerson, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Person.TelefonnummerTilPerson, "", new { @class = "text-danger" })
+            </div>
+        </div>
+   
+
+        @* Kundens email *@
+        <div class="form-group">
+            @Html.LabelFor(model => model.Person.EmailTilPerson, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Person.EmailTilPerson, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Person.EmailTilPerson, "", new { @class = "text-danger" })
+            </div>
+        </div>
+   
+
+
+
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.SamtykkeTilDenneListe, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SamtykkeTilDenneListe, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SamtykkeTilDenneListe, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+
+
+
+
+
+
+        @* Kundens adresse *@
+<div class="form-group">
+    @* Adressen opdeles i felter, og sættes sammen i Viewmodel *@
+    <div>
+
+        <label class="control-label col-md-2" for="postnr">Postnummer</label>
+        <div class="col-md-10">
+            <input class="form-control" type="text" list="forslagsliste" id="inpPostnr" value="" autocomplete="off" />
+            <datalist id="forslagsliste">
+            </datalist>
+        </div>
+    </div>
+
+   
+
+
+
+    @Html.LabelFor(model => model.Person.AdresseTilPerson, htmlAttributes: new { @class = "control-label col-md-2" })
+    <div class="col-md-10">
+        @Html.EditorFor(model => model.Person.AdresseTilPerson, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Person.AdresseTilPerson, "", new { @class = "text-danger" })
+    </div>
+</div>
+   
+
+
+      
+        @*<div class="col-md-5">
+            Overførsel til bankkonto:   <span class="text-black-50">5479-0003464544</span>            
+        </div>*@
+        <div class="col-md-5">
+
+           Du er ved at indhente tilbud på disse bøger:
+            <ul>
+                @foreach (var produkt in kurven)
+                {
+                    <li>@produkt.Navn</li>
+                }
+            </ul>
+            
+        </div>
+   
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <div class="badge-success">@Model.Besked</div>
+            <input type="submit" value="Send bestilling afsted" class="btn btn-primary" />
+            <small>Jeg svarer på din bestilling, oplyser betalingsmuligheder, forsendelse. Når betaling modtages afsendes bøgerne samme dag.</small>
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

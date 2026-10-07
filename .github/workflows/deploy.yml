@@ -1,0 +1,52 @@
+name: Build and deploy to webhotel
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  SOLUTION_OR_PROJECT: Anemette.csproj
+  PUBLISH_DIR: publish
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore ${{ env.SOLUTION_OR_PROJECT }}
+
+      - name: Build and publish (FileSystem)
+        run: >
+          msbuild ${{ env.SOLUTION_OR_PROJECT }}
+          /p:Configuration=Release
+          /p:Platform="AnyCPU"
+          /p:DeployOnBuild=true
+          /p:WebPublishMethod=FileSystem
+          /p:publishUrl=${{ env.PUBLISH_DIR }}
+          /p:DeleteExistingFiles=true
+
+      - name: Deploy over FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./${{ env.PUBLISH_DIR }}/
+          server-dir: /anemetteolesen.dk/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/Uploads/**

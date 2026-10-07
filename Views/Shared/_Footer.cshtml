@@ -1,0 +1,83 @@
+﻿@model Anemette.Models.tblNyhedsbrev
+
+@* Facebook delknap fra https://developers.facebook.com/docs/plugins/share-button*@
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/da_DK/sdk.js#xfbml=1&version=v7.0"></script>
+
+<!-- Footer -->
+<footer class="page-footer font-small blue-grey lighten-5">
+
+
+
+    <!-- Footer Links -->
+    <div class="container text-center text-md-left mt-5">
+
+        <!-- Grid row -->
+        <div class="row mt-3 dark-grey-text">
+
+            <!-- Grid column -->
+            <div class="col-md-3 col-lg-4 col-xl-3 mb-4">
+
+                <!-- Content -->
+                <h6 class="text-uppercase font-weight-bold">Skarresøhus Forlag</h6>
+                <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                <p>
+                    @* Google Map *@
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d8841.705959014285!2d10.525417!3d56.356977!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x38fc084faab90238!2sSkarres%C3%B8hus%20Forlag!5e0!3m2!1sda!2sdk!4v1589058100753!5m2!1sda!2sdk" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                    @* Facebook del-knap *@
+                    @*<div class="fb-share-button" data-href="https://www.anemetteolesen.dk" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.anemetteolesen.dk%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Del</a></div>*@
+                </p>
+
+            </div>
+            <!-- Grid column -->
+            <!-- Grid column -->
+            @*<div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+
+            <!-- Links -->
+            <h6 class="text-uppercase font-weight-bold">Mine sider</h6>
+            <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+            <p>
+                <a class="dark-grey-text" href="/Produkt/Index">Mine bøger</a>
+            </p>
+            <p>
+                <a class="dark-grey-text" href="/Event/Index">Mine kurser</a>
+            </p>
+
+
+             </div>*@
+            <!-- Grid column -->
+            <!-- Grid column -->
+            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+
+                <!-- Links -->
+                <h6 class="text-uppercase font-weight-bold">Kontakt</h6>
+                <hr class="teal accent-3 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+                <p>
+                    <i class="material-icons ">&#xe88a;</i> Ballevej 27, 8550 Ryomgård
+                </p>
+                <p>
+                    @Html.ActionLink("Send mig en besked", "ContactForm", "Home")
+                </p>
+
+                <p>
+                    @* klassen gør brug af Google Material Icon som er indsat via CDN i Layout *@
+                    <i class="material-icons ">&#xe0be;</i> <a href="mailto:anemette@anemetteolesen.dk">anemette@anemetteolesen.dk</a>
+                </p>
+                <p>
+                    @* &#9743; er telefonicon https://www.toptal.com/designers/htmlarrows/symbols/white-telephone/ *@
+                    @* &phone; er en HTML-entity *@
+                    <i class="material-icons ">&phone;</i> <a href="tel:004523404309">23404309</a>
+                </p>
+
+
+            </div>
+            <!-- Grid column -->
+
+        </div>
+        <!-- Grid row -->
+
+    </div>
+
+
+</footer>
+<!-- Footer -->

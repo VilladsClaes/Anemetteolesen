@@ -1,0 +1,68 @@
+﻿@model Anemette.Models.tblProdukt
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>tblProdukt</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Navn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Navn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Beskrivelse)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Beskrivelse)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Pris)
+        </dt>
+
+
+        <dd>
+            @Html.DisplayFor(model => model.Pris)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Antal)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Antal)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tblProduktKategori.Kategori)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tblProduktKategori.Kategori)
+        </dd>
+        <dt>Billede</dt>
+        <dd>
+            @foreach (var item in Model.tblBilledes.Where(b => b.FK_Produkt == Model.ID))
+            {
+                <img src="~/Uploads/@item.BilledeFil" width="200" alt="Billede af @item.BilledeAlternativTekst" />
+
+            }
+            @*<img src="~/Uploads/@Model.tblBilledes.Where(b => b.FK_Produkt == Model.ID).FirstOrDefault().BilledeFil" width="200" alt="Billede af @Model.tblBilledes.Where(b => b.FK_Produkt == Model.ID).FirstOrDefault().BilledeAlternativTekst" />*@
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

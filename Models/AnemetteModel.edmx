@@ -1,0 +1,1878 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="villadsclaes_dk_db_villadsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="History">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="timestamp" Type="timestamp" StoreGeneratedPattern="Computed" />
+          <Property Name="name" Type="nvarchar(max)" />
+          <Property Name="type" Type="nvarchar" MaxLength="500" />
+          <Property Name="node_id" Type="bigint" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="tblAdmin">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Brugernavn" Type="nvarchar" MaxLength="150" />
+          <Property Name="Password" Type="nvarchar" MaxLength="150" />
+          <Property Name="Salt" Type="nvarchar" MaxLength="150" />
+          <Property Name="BrugerEmail" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="tblArtikel">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ArtikelOverskrift" Type="nvarchar" MaxLength="150" />
+          <Property Name="ArtikelTekst" Type="nvarchar(max)" />
+          <Property Name="ArtikelBannerBillede" Type="nvarchar" MaxLength="150" />
+          <Property Name="ArtikelManchetTekst" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="tblBestyrelse">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MedlemsBillede" Type="nvarchar" MaxLength="150" />
+          <Property Name="MedlemsNavn" Type="nvarchar" MaxLength="150" />
+          <Property Name="MedlemsTitel" Type="nvarchar" MaxLength="150" />
+          <Property Name="MedlemsBeskrivelse" Type="nvarchar" MaxLength="550" />
+          <Property Name="MedlemsMail" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="tblBillede">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BilledeFil" Type="nvarchar" MaxLength="850" />
+          <Property Name="BilledeAlternativTekst" Type="nvarchar" MaxLength="250" />
+          <Property Name="BilledeBeskrivelse" Type="nvarchar" MaxLength="350" />
+          <Property Name="BilledeOverskrift" Type="nvarchar" MaxLength="250" />
+          <Property Name="FK_Type" Type="int" />
+          <Property Name="FK_Artikel" Type="int" />
+          <Property Name="FK_Produkt" Type="int" />
+          <Property Name="FK_Event" Type="int" />
+          <Property Name="FK_Bestyrelse" Type="int" />
+          <Property Name="FK_Person" Type="int" />
+          <Property Name="FK_Sponsor" Type="int" />
+          <Property Name="FK_Side" Type="int" />
+        </EntityType>
+        <EntityType Name="tblBillet">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BilletType" Type="nvarchar" MaxLength="250" />
+          <Property Name="BilletBeskrivelse" Type="nvarchar" MaxLength="550" />
+          <Property Name="BilletAntalGlas" Type="int" />
+          <Property Name="BilletPris" Type="int" />
+          <Property Name="BilletLink" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="tblEvent">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EventOverskrift" Type="nvarchar" MaxLength="150" />
+          <Property Name="EventDato" Type="datetime" />
+          <Property Name="EventBeskrivelse" Type="nvarchar" MaxLength="750" />
+          <Property Name="EventPris" Type="int" />
+          <Property Name="EventPladser" Type="int" />
+          <Property Name="EventDistance" Type="int" />
+          <Property Name="FK_Region" Type="int" />
+          <Property Name="FK_Sponsor" Type="int" />
+          <Property Name="FK_Type" Type="int" />
+        </EntityType>
+        <EntityType Name="tblEventRegion">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Region" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tblNyhedsbrev">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_Person" Type="int" />
+          <Property Name="Emailadresse" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="tblPerson">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NavnTilPerson" Type="nvarchar" MaxLength="250" />
+          <Property Name="TelefonnummerTilPerson" Type="nvarchar" MaxLength="50" />
+          <Property Name="EmailTilPerson" Type="nvarchar" MaxLength="50" />
+          <Property Name="BilledeAfPerson" Type="nvarchar" MaxLength="150" />
+          <Property Name="RSVP" Type="nvarchar" MaxLength="50" />
+          <Property Name="SamtykkeTilDenneListe" Type="nvarchar" MaxLength="50" />
+          <Property Name="FK_HvorKenderViPersonenFra" Type="int" />
+          <Property Name="MedlemsskabAfForetagsomheden" Type="nvarchar" MaxLength="110" />
+          <Property Name="BidragTilAuktionen" Type="nvarchar" MaxLength="550" />
+          <Property Name="BidragTilSneglebingo" Type="nvarchar" MaxLength="550" />
+          <Property Name="BidragTilForberedelse" Type="nvarchar" MaxLength="550" />
+          <Property Name="FK_TjansUnderEvent" Type="int" />
+          <Property Name="Salt" Type="nvarchar" MaxLength="550" />
+          <Property Name="HashetLink" Type="nvarchar" MaxLength="550" />
+          <Property Name="FK_BilletType" Type="int" />
+          <Property Name="AlderAfPerson" Type="datetime" />
+          <Property Name="LoebeDistanceForPerson" Type="int" />
+          <Property Name="FK_Region_Hjemstavn" Type="int" />
+          <Property Name="AdresseTilPerson" Type="nvarchar" MaxLength="550" />
+          <Property Name="AntalGangePersonenHarBesogtSiden" Type="int" />
+        </EntityType>
+        <EntityType Name="tblProdukt">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Navn" Type="nvarchar" MaxLength="150" />
+          <Property Name="Beskrivelse" Type="nvarchar" MaxLength="250" />
+          <Property Name="Pris" Type="int" />
+          <Property Name="Antal" Type="int" />
+          <Property Name="FK_ProductCategoryID" Type="int" />
+        </EntityType>
+        <EntityType Name="tblProduktKategori">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Kategori" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="tblSide">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SideTitel" Type="nvarchar" MaxLength="150" />
+          <Property Name="SideBeskrivelse" Type="nvarchar" MaxLength="450" />
+          <Property Name="SideOprettelsesDato" Type="date" />
+          <Property Name="SideLink" Type="nvarchar" MaxLength="150" />
+          <Property Name="SideBillede" Type="nvarchar" MaxLength="150" />
+          <Property Name="FK_Type" Type="int" />
+        </EntityType>
+        <EntityType Name="tblSpm">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Spm" Type="nvarchar" MaxLength="500" />
+          <Property Name="FK_Type" Type="int" />
+        </EntityType>
+        <EntityType Name="tblSponsor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SponsorNavn" Type="nvarchar" MaxLength="150" />
+          <Property Name="SponsorLogo" Type="nvarchar" MaxLength="150" />
+          <Property Name="FK_SponsorType" Type="int" />
+          <Property Name="SponsorLogoAlternativtekst" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="tblSponsorType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SponsorType" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="tblSted">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HvorKenderViPersonenFra" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="tblSvar">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FK_Person" Type="int" />
+          <Property Name="FK_Spm" Type="int" />
+          <Property Name="Svar" Type="nvarchar" MaxLength="2500" />
+        </EntityType>
+        <EntityType Name="tblTag">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Tag" Type="nvarchar" MaxLength="50" />
+          <Property Name="FK_Side" Type="int" />
+        </EntityType>
+        <EntityType Name="tblTilmelding">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TilmeldteEmail" Type="nvarchar" MaxLength="250" />
+          <Property Name="FK_Event" Type="int" />
+          <Property Name="FK_Person" Type="int" />
+        </EntityType>
+        <EntityType Name="tblTjans">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TjansUnderEvent" Type="nvarchar" MaxLength="210" />
+        </EntityType>
+        <EntityType Name="tblType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tblValg">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Valg" Type="nvarchar" MaxLength="150" />
+          <Property Name="FK_Spm" Type="int" />
+          <Property Name="FK_Svar_DetKorrekteSvar" Type="int" />
+        </EntityType>
+        <Association Name="FK_Product_Category">
+          <End Role="tblProduktKategori" Type="Self.tblProduktKategori" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblProdukt" Type="Self.tblProdukt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProduktKategori">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblProdukt">
+              <PropertyRef Name="FK_ProductCategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblArtikel">
+          <End Role="tblArtikel" Type="Self.tblArtikel" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblArtikel">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Artikel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblBestyrelse">
+          <End Role="tblBestyrelse" Type="Self.tblBestyrelse" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBestyrelse">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Bestyrelse" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblEvent">
+          <End Role="tblEvent" Type="Self.tblEvent" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEvent">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Event" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblPerson">
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblProdukt">
+          <End Role="tblProdukt" Type="Self.tblProdukt" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProdukt">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Produkt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblSide">
+          <End Role="tblSide" Type="Self.tblSide" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSide">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Side" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblSponsor">
+          <End Role="tblSponsor" Type="Self.tblSponsor" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSponsor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Sponsor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblType">
+          <End Role="tblType" Type="Self.tblType" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEvent_tblEventRegion">
+          <End Role="tblEventRegion" Type="Self.tblEventRegion" Multiplicity="0..1" />
+          <End Role="tblEvent" Type="Self.tblEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEventRegion">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblEvent">
+              <PropertyRef Name="FK_Region" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEvent_tblSponsor">
+          <End Role="tblSponsor" Type="Self.tblSponsor" Multiplicity="0..1" />
+          <End Role="tblEvent" Type="Self.tblEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSponsor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblEvent">
+              <PropertyRef Name="FK_Sponsor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEvent_tblType">
+          <End Role="tblType" Type="Self.tblType" Multiplicity="0..1" />
+          <End Role="tblEvent" Type="Self.tblEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblEvent">
+              <PropertyRef Name="FK_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblNyhedsbrev_tblPerson">
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="0..1" />
+          <End Role="tblNyhedsbrev" Type="Self.tblNyhedsbrev" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblNyhedsbrev">
+              <PropertyRef Name="FK_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPerson_tblBillet">
+          <End Role="tblBillet" Type="Self.tblBillet" Multiplicity="0..1" />
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBillet">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblPerson">
+              <PropertyRef Name="FK_BilletType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPerson_tblEventRegion">
+          <End Role="tblEventRegion" Type="Self.tblEventRegion" Multiplicity="0..1" />
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEventRegion">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblPerson">
+              <PropertyRef Name="FK_Region_Hjemstavn" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPerson_tblSted">
+          <End Role="tblSted" Type="Self.tblSted" Multiplicity="0..1" />
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSted">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblPerson">
+              <PropertyRef Name="FK_HvorKenderViPersonenFra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPerson_tblTjans">
+          <End Role="tblTjans" Type="Self.tblTjans" Multiplicity="0..1" />
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTjans">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblPerson">
+              <PropertyRef Name="FK_TjansUnderEvent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSide_tblType">
+          <End Role="tblType" Type="Self.tblType" Multiplicity="0..1" />
+          <End Role="tblSide" Type="Self.tblSide" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSide">
+              <PropertyRef Name="FK_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSpm_tblType">
+          <End Role="tblType" Type="Self.tblType" Multiplicity="0..1" />
+          <End Role="tblSpm" Type="Self.tblSpm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSpm">
+              <PropertyRef Name="FK_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSponsor_tblSponsorType">
+          <End Role="tblSponsorType" Type="Self.tblSponsorType" Multiplicity="0..1" />
+          <End Role="tblSponsor" Type="Self.tblSponsor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSponsorType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSponsor">
+              <PropertyRef Name="FK_SponsorType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSvar_tblPerson">
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="0..1" />
+          <End Role="tblSvar" Type="Self.tblSvar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSvar">
+              <PropertyRef Name="FK_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSvar_tblSpm">
+          <End Role="tblSpm" Type="Self.tblSpm" Multiplicity="0..1" />
+          <End Role="tblSvar" Type="Self.tblSvar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSpm">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSvar">
+              <PropertyRef Name="FK_Spm" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTag_tblSide">
+          <End Role="tblSide" Type="Self.tblSide" Multiplicity="0..1" />
+          <End Role="tblTag" Type="Self.tblTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSide">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblTag">
+              <PropertyRef Name="FK_Side" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTilmelding_tblEvent">
+          <End Role="tblEvent" Type="Self.tblEvent" Multiplicity="0..1" />
+          <End Role="tblTilmelding" Type="Self.tblTilmelding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEvent">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblTilmelding">
+              <PropertyRef Name="FK_Event" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTilmelding_tblPerson">
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="0..1" />
+          <End Role="tblTilmelding" Type="Self.tblTilmelding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblTilmelding">
+              <PropertyRef Name="FK_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblValg_tblSpm">
+          <End Role="tblSpm" Type="Self.tblSpm" Multiplicity="0..1" />
+          <End Role="tblValg" Type="Self.tblValg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSpm">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblValg">
+              <PropertyRef Name="FK_Spm" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblValg_tblSvar">
+          <End Role="tblSvar" Type="Self.tblSvar" Multiplicity="0..1" />
+          <End Role="tblValg" Type="Self.tblValg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSvar">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblValg">
+              <PropertyRef Name="FK_Svar_DetKorrekteSvar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="version" Type="int" Mode="In" />
+          <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+        </Function>
+        <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+          <Parameter Name="owner_id" Type="int" Mode="In" />
+          <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <EntityContainer Name="villadsclaes_dk_db_villadsModelStoreContainer">
+          <EntitySet Name="History" EntityType="Self.History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblAdmin" EntityType="Self.tblAdmin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblArtikel" EntityType="Self.tblArtikel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblBestyrelse" EntityType="Self.tblBestyrelse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblBillede" EntityType="Self.tblBillede" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblBillet" EntityType="Self.tblBillet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblEvent" EntityType="Self.tblEvent" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblEventRegion" EntityType="Self.tblEventRegion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblNyhedsbrev" EntityType="Self.tblNyhedsbrev" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblPerson" EntityType="Self.tblPerson" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblProdukt" EntityType="Self.tblProdukt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblProduktKategori" EntityType="Self.tblProduktKategori" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSide" EntityType="Self.tblSide" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSpm" EntityType="Self.tblSpm" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSponsor" EntityType="Self.tblSponsor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSponsorType" EntityType="Self.tblSponsorType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSted" EntityType="Self.tblSted" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblSvar" EntityType="Self.tblSvar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTag" EntityType="Self.tblTag" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTilmelding" EntityType="Self.tblTilmelding" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblTjans" EntityType="Self.tblTjans" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblType" EntityType="Self.tblType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblValg" EntityType="Self.tblValg" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+            <End Role="tblProduktKategori" EntitySet="tblProduktKategori" />
+            <End Role="tblProdukt" EntitySet="tblProdukt" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblArtikel" Association="Self.FK_tblBillede_tblArtikel">
+            <End Role="tblArtikel" EntitySet="tblArtikel" />
+            <End Role="tblBillede" EntitySet="tblBillede" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblBestyrelse" Association="Self.FK_tblBillede_tblBestyrelse">
+            <End Role="tblBestyrelse" EntitySet="tblBestyrelse" />
+            <End Role="tblBillede" EntitySet="tblBillede" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblEvent" Association="Self.FK_tblBillede_tblEvent">
+            <End Role="tblEvent" EntitySet="tblEvent" />
+            <End Role="tblBillede" EntitySet="tblBillede" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblPerson" Association="Self.FK_tblBillede_tblPerson">
+            <End Role="tblPerson" EntitySet="tblPerson" />
+            <End Role="tblBillede" EntitySet="tblBillede" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblProdukt" Association="Self.FK_tblBillede_tblProdukt">
+            <End Role="tblProdukt" EntitySet="tblProdukt" />
+            <End Role="tblBillede" EntitySet="tblBillede" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblSide" Association="Self.FK_tblBillede_tblSide">
+            <End Role="tblSide" EntitySet="tblSide" />
+            <End Role="tblBillede" EntitySet="tblBillede" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblSponsor" Association="Self.FK_tblBillede_tblSponsor">
+            <End Role="tblSponsor" EntitySet="tblSponsor" />
+            <End Role="tblBillede" EntitySet="tblBillede" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblType" Association="Self.FK_tblBillede_tblType">
+            <End Role="tblType" EntitySet="tblType" />
+            <End Role="tblBillede" EntitySet="tblBillede" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEvent_tblEventRegion" Association="Self.FK_tblEvent_tblEventRegion">
+            <End Role="tblEventRegion" EntitySet="tblEventRegion" />
+            <End Role="tblEvent" EntitySet="tblEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEvent_tblSponsor" Association="Self.FK_tblEvent_tblSponsor">
+            <End Role="tblSponsor" EntitySet="tblSponsor" />
+            <End Role="tblEvent" EntitySet="tblEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEvent_tblType" Association="Self.FK_tblEvent_tblType">
+            <End Role="tblType" EntitySet="tblType" />
+            <End Role="tblEvent" EntitySet="tblEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblNyhedsbrev_tblPerson" Association="Self.FK_tblNyhedsbrev_tblPerson">
+            <End Role="tblPerson" EntitySet="tblPerson" />
+            <End Role="tblNyhedsbrev" EntitySet="tblNyhedsbrev" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPerson_tblBillet" Association="Self.FK_tblPerson_tblBillet">
+            <End Role="tblBillet" EntitySet="tblBillet" />
+            <End Role="tblPerson" EntitySet="tblPerson" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPerson_tblEventRegion" Association="Self.FK_tblPerson_tblEventRegion">
+            <End Role="tblEventRegion" EntitySet="tblEventRegion" />
+            <End Role="tblPerson" EntitySet="tblPerson" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPerson_tblSted" Association="Self.FK_tblPerson_tblSted">
+            <End Role="tblSted" EntitySet="tblSted" />
+            <End Role="tblPerson" EntitySet="tblPerson" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPerson_tblTjans" Association="Self.FK_tblPerson_tblTjans">
+            <End Role="tblTjans" EntitySet="tblTjans" />
+            <End Role="tblPerson" EntitySet="tblPerson" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSide_tblType" Association="Self.FK_tblSide_tblType">
+            <End Role="tblType" EntitySet="tblType" />
+            <End Role="tblSide" EntitySet="tblSide" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSpm_tblType" Association="Self.FK_tblSpm_tblType">
+            <End Role="tblType" EntitySet="tblType" />
+            <End Role="tblSpm" EntitySet="tblSpm" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSponsor_tblSponsorType" Association="Self.FK_tblSponsor_tblSponsorType">
+            <End Role="tblSponsorType" EntitySet="tblSponsorType" />
+            <End Role="tblSponsor" EntitySet="tblSponsor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSvar_tblPerson" Association="Self.FK_tblSvar_tblPerson">
+            <End Role="tblPerson" EntitySet="tblPerson" />
+            <End Role="tblSvar" EntitySet="tblSvar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSvar_tblSpm" Association="Self.FK_tblSvar_tblSpm">
+            <End Role="tblSpm" EntitySet="tblSpm" />
+            <End Role="tblSvar" EntitySet="tblSvar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTag_tblSide" Association="Self.FK_tblTag_tblSide">
+            <End Role="tblSide" EntitySet="tblSide" />
+            <End Role="tblTag" EntitySet="tblTag" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTilmelding_tblEvent" Association="Self.FK_tblTilmelding_tblEvent">
+            <End Role="tblEvent" EntitySet="tblEvent" />
+            <End Role="tblTilmelding" EntitySet="tblTilmelding" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTilmelding_tblPerson" Association="Self.FK_tblTilmelding_tblPerson">
+            <End Role="tblPerson" EntitySet="tblPerson" />
+            <End Role="tblTilmelding" EntitySet="tblTilmelding" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblValg_tblSpm" Association="Self.FK_tblValg_tblSpm">
+            <End Role="tblSpm" EntitySet="tblSpm" />
+            <End Role="tblValg" EntitySet="tblValg" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblValg_tblSvar" Association="Self.FK_tblValg_tblSvar">
+            <End Role="tblSvar" EntitySet="tblSvar" />
+            <End Role="tblValg" EntitySet="tblValg" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="villadsclaes_dk_db_villadsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="History">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="timestamp" Type="Binary" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="type" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="node_id" Type="Int64" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="tblAdmin">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Brugernavn" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Salt" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="BrugerEmail" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tblArtikel">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ArtikelOverskrift" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ArtikelTekst" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ArtikelBannerBillede" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ArtikelManchetTekst" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblBilledes" Relationship="Self.FK_tblBillede_tblArtikel" FromRole="tblArtikel" ToRole="tblBillede" />
+        </EntityType>
+        <EntityType Name="tblBestyrelse">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MedlemsBillede" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="MedlemsNavn" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="MedlemsTitel" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="MedlemsBeskrivelse" Type="String" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="MedlemsMail" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblBilledes" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblBestyrelse" FromRole="tblBestyrelse" ToRole="tblBillede" />
+        </EntityType>
+        <EntityType Name="tblBillede">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BilledeFil" Type="String" MaxLength="850" FixedLength="false" Unicode="true" />
+          <Property Name="BilledeAlternativTekst" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="BilledeBeskrivelse" Type="String" MaxLength="350" FixedLength="false" Unicode="true" />
+          <Property Name="BilledeOverskrift" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FK_Type" Type="Int32" />
+          <Property Name="FK_Artikel" Type="Int32" />
+          <Property Name="FK_Produkt" Type="Int32" />
+          <NavigationProperty Name="tblArtikel" Relationship="Self.FK_tblBillede_tblArtikel" FromRole="tblBillede" ToRole="tblArtikel" />
+          <NavigationProperty Name="tblProdukt" Relationship="Self.FK_tblBillede_tblProdukt" FromRole="tblBillede" ToRole="tblProdukt" />
+          <NavigationProperty Name="tblType" Relationship="Self.FK_tblBillede_tblType" FromRole="tblBillede" ToRole="tblType" />
+          <Property Name="FK_Event" Type="Int32" />
+          <Property Name="FK_Bestyrelse" Type="Int32" />
+          <Property Name="FK_Person" Type="Int32" />
+          <Property Name="FK_Sponsor" Type="Int32" />
+          <Property Name="FK_Side" Type="Int32" />
+          <NavigationProperty Name="tblBestyrelse" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblBestyrelse" FromRole="tblBillede" ToRole="tblBestyrelse" />
+          <NavigationProperty Name="tblPerson" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblPerson" FromRole="tblBillede" ToRole="tblPerson" />
+          <NavigationProperty Name="tblSide" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblSide" FromRole="tblBillede" ToRole="tblSide" />
+          <NavigationProperty Name="tblSponsor" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblSponsor" FromRole="tblBillede" ToRole="tblSponsor" />
+          <NavigationProperty Name="tblEvent" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblEvent" FromRole="tblBillede" ToRole="tblEvent" />
+        </EntityType>
+        <EntityType Name="tblBillet">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BilletType" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="BilletBeskrivelse" Type="String" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="BilletAntalGlas" Type="Int32" />
+          <Property Name="BilletPris" Type="Int32" />
+          <Property Name="BilletLink" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblPersons" Relationship="Self.FK_tblPerson_tblBillet" FromRole="tblBillet" ToRole="tblPerson" />
+        </EntityType>
+        <EntityType Name="tblEventRegion">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Region" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblPersons" Relationship="Self.FK_tblPerson_tblEventRegion" FromRole="tblEventRegion" ToRole="tblPerson" />
+          <NavigationProperty Name="tblEvents" Relationship="villadsclaes_dk_db_villadsModel.FK_tblEvent_tblEventRegion" FromRole="tblEventRegion" ToRole="tblEvent" />
+        </EntityType>
+        <EntityType Name="tblNyhedsbrev">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_Person" Type="Int32" />
+          <Property Name="Emailadresse" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblPerson" Relationship="Self.FK_tblNyhedsbrev_tblPerson" FromRole="tblNyhedsbrev" ToRole="tblPerson" />
+        </EntityType>
+        <EntityType Name="tblPerson">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NavnTilPerson" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="TelefonnummerTilPerson" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EmailTilPerson" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BilledeAfPerson" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="RSVP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SamtykkeTilDenneListe" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FK_HvorKenderViPersonenFra" Type="Int32" />
+          <Property Name="MedlemsskabAfForetagsomheden" Type="String" MaxLength="110" FixedLength="false" Unicode="true" />
+          <Property Name="BidragTilAuktionen" Type="String" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="BidragTilSneglebingo" Type="String" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="BidragTilForberedelse" Type="String" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="FK_TjansUnderEvent" Type="Int32" />
+          <Property Name="Salt" Type="String" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="HashetLink" Type="String" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="FK_BilletType" Type="Int32" />
+          <Property Name="AlderAfPerson" Type="DateTime" Precision="3" />
+          <Property Name="LoebeDistanceForPerson" Type="Int32" />
+          <Property Name="FK_Region_Hjemstavn" Type="Int32" />
+          <NavigationProperty Name="tblBillet" Relationship="Self.FK_tblPerson_tblBillet" FromRole="tblPerson" ToRole="tblBillet" />
+          <NavigationProperty Name="tblEventRegion" Relationship="Self.FK_tblPerson_tblEventRegion" FromRole="tblPerson" ToRole="tblEventRegion" />
+          <NavigationProperty Name="tblNyhedsbrevs" Relationship="Self.FK_tblNyhedsbrev_tblPerson" FromRole="tblPerson" ToRole="tblNyhedsbrev" />
+          <NavigationProperty Name="tblSted" Relationship="Self.FK_tblPerson_tblSted" FromRole="tblPerson" ToRole="tblSted" />
+          <NavigationProperty Name="tblTjan" Relationship="Self.FK_tblPerson_tblTjans" FromRole="tblPerson" ToRole="tblTjans" />
+          <NavigationProperty Name="tblSvars" Relationship="Self.FK_tblSvar_tblPerson" FromRole="tblPerson" ToRole="tblSvar" />
+          <NavigationProperty Name="tblTilmeldings" Relationship="Self.FK_tblTilmelding_tblPerson" FromRole="tblPerson" ToRole="tblTilmelding" />
+          <NavigationProperty Name="tblBilledes" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblPerson" FromRole="tblPerson" ToRole="tblBillede" />
+          <Property Name="AdresseTilPerson" Type="String" MaxLength="550" FixedLength="false" Unicode="true" />
+          <Property Name="AntalGangePersonenHarBesogtSiden" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tblProdukt">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Navn" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Beskrivelse" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Pris" Type="Int32" />
+          <Property Name="Antal" Type="Int32" />
+          <Property Name="FK_ProductCategoryID" Type="Int32" />
+          <NavigationProperty Name="tblBilledes" Relationship="Self.FK_tblBillede_tblProdukt" FromRole="tblProdukt" ToRole="tblBillede" />
+          <NavigationProperty Name="tblProduktKategori" Relationship="Self.FK_Product_Category" FromRole="tblProdukt" ToRole="tblProduktKategori" />
+        </EntityType>
+        <EntityType Name="tblProduktKategori">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Kategori" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblProdukts" Relationship="Self.FK_Product_Category" FromRole="tblProduktKategori" ToRole="tblProdukt" />
+        </EntityType>
+        <EntityType Name="tblSide">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SideTitel" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="SideBeskrivelse" Type="String" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="SideOprettelsesDato" Type="DateTime" Precision="0" />
+          <Property Name="SideLink" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="SideBillede" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblTags" Relationship="Self.FK_tblTag_tblSide" FromRole="tblSide" ToRole="tblTag" />
+          <Property Name="FK_Type" Type="Int32" />
+          <NavigationProperty Name="tblType" Relationship="villadsclaes_dk_db_villadsModel.FK_tblSide_tblType" FromRole="tblSide" ToRole="tblType" />
+          <NavigationProperty Name="tblBilledes" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblSide" FromRole="tblSide" ToRole="tblBillede" />
+        </EntityType>
+        <EntityType Name="tblSpm">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Spm" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FK_Type" Type="Int32" />
+          <NavigationProperty Name="tblType" Relationship="Self.FK_tblSpm_tblType" FromRole="tblSpm" ToRole="tblType" />
+          <NavigationProperty Name="tblSvars" Relationship="Self.FK_tblSvar_tblSpm" FromRole="tblSpm" ToRole="tblSvar" />
+          <NavigationProperty Name="tblValgs" Relationship="Self.FK_tblValg_tblSpm" FromRole="tblSpm" ToRole="tblValg" />
+        </EntityType>
+        <EntityType Name="tblSponsor">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SponsorNavn" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="SponsorLogo" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FK_SponsorType" Type="Int32" />
+          <Property Name="SponsorLogoAlternativtekst" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblSponsorType" Relationship="Self.FK_tblSponsor_tblSponsorType" FromRole="tblSponsor" ToRole="tblSponsorType" />
+          <NavigationProperty Name="tblBilledes" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblSponsor" FromRole="tblSponsor" ToRole="tblBillede" />
+          <NavigationProperty Name="tblEvents" Relationship="villadsclaes_dk_db_villadsModel.FK_tblEvent_tblSponsor" FromRole="tblSponsor" ToRole="tblEvent" />
+        </EntityType>
+        <EntityType Name="tblSponsorType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SponsorType" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblSponsors" Relationship="Self.FK_tblSponsor_tblSponsorType" FromRole="tblSponsorType" ToRole="tblSponsor" />
+        </EntityType>
+        <EntityType Name="tblSted">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HvorKenderViPersonenFra" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblPersons" Relationship="Self.FK_tblPerson_tblSted" FromRole="tblSted" ToRole="tblPerson" />
+        </EntityType>
+        <EntityType Name="tblSvar">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FK_Person" Type="Int32" />
+          <Property Name="FK_Spm" Type="Int32" />
+          <Property Name="Svar" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblPerson" Relationship="Self.FK_tblSvar_tblPerson" FromRole="tblSvar" ToRole="tblPerson" />
+          <NavigationProperty Name="tblSpm" Relationship="Self.FK_tblSvar_tblSpm" FromRole="tblSvar" ToRole="tblSpm" />
+          <NavigationProperty Name="tblValgs" Relationship="Self.FK_tblValg_tblSvar" FromRole="tblSvar" ToRole="tblValg" />
+        </EntityType>
+        <EntityType Name="tblTag">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tag" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FK_Side" Type="Int32" />
+          <NavigationProperty Name="tblSide" Relationship="Self.FK_tblTag_tblSide" FromRole="tblTag" ToRole="tblSide" />
+        </EntityType>
+        <EntityType Name="tblTilmelding">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TilmeldteEmail" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="FK_Event" Type="Int32" />
+          <Property Name="FK_Person" Type="Int32" />
+          <NavigationProperty Name="tblPerson" Relationship="Self.FK_tblTilmelding_tblPerson" FromRole="tblTilmelding" ToRole="tblPerson" />
+          <NavigationProperty Name="tblEvent" Relationship="villadsclaes_dk_db_villadsModel.FK_tblTilmelding_tblEvent" FromRole="tblTilmelding" ToRole="tblEvent" />
+        </EntityType>
+        <EntityType Name="tblTjan">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TjansUnderEvent" Type="String" MaxLength="210" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblPersons" Relationship="Self.FK_tblPerson_tblTjans" FromRole="tblTjans" ToRole="tblPerson" />
+        </EntityType>
+        <EntityType Name="tblType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tblBilledes" Relationship="Self.FK_tblBillede_tblType" FromRole="tblType" ToRole="tblBillede" />
+          <NavigationProperty Name="tblSpms" Relationship="Self.FK_tblSpm_tblType" FromRole="tblType" ToRole="tblSpm" />
+          <NavigationProperty Name="tblSides" Relationship="villadsclaes_dk_db_villadsModel.FK_tblSide_tblType" FromRole="tblType" ToRole="tblSide" />
+          <NavigationProperty Name="tblEvents" Relationship="villadsclaes_dk_db_villadsModel.FK_tblEvent_tblType" FromRole="tblType" ToRole="tblEvent" />
+        </EntityType>
+        <EntityType Name="tblValg">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Valg" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="FK_Spm" Type="Int32" />
+          <Property Name="FK_Svar_DetKorrekteSvar" Type="Int32" />
+          <NavigationProperty Name="tblSpm" Relationship="Self.FK_tblValg_tblSpm" FromRole="tblValg" ToRole="tblSpm" />
+          <NavigationProperty Name="tblSvar" Relationship="Self.FK_tblValg_tblSvar" FromRole="tblValg" ToRole="tblSvar" />
+        </EntityType>
+        <Association Name="FK_tblBillede_tblArtikel">
+          <End Role="tblArtikel" Type="Self.tblArtikel" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblArtikel">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Artikel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblProdukt">
+          <End Role="tblProdukt" Type="Self.tblProdukt" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProdukt">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Produkt" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblType">
+          <End Role="tblType" Type="Self.tblType" Multiplicity="0..1" />
+          <End Role="tblBillede" Type="Self.tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPerson_tblBillet">
+          <End Role="tblBillet" Type="Self.tblBillet" Multiplicity="0..1" />
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBillet">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblPerson">
+              <PropertyRef Name="FK_BilletType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPerson_tblEventRegion">
+          <End Role="tblEventRegion" Type="Self.tblEventRegion" Multiplicity="0..1" />
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEventRegion">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblPerson">
+              <PropertyRef Name="FK_Region_Hjemstavn" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblNyhedsbrev_tblPerson">
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="0..1" />
+          <End Role="tblNyhedsbrev" Type="Self.tblNyhedsbrev" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblNyhedsbrev">
+              <PropertyRef Name="FK_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPerson_tblSted">
+          <End Role="tblSted" Type="Self.tblSted" Multiplicity="0..1" />
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSted">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblPerson">
+              <PropertyRef Name="FK_HvorKenderViPersonenFra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblPerson_tblTjans">
+          <End Role="tblTjans" Type="Self.tblTjan" Multiplicity="0..1" />
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblTjans">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblPerson">
+              <PropertyRef Name="FK_TjansUnderEvent" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSvar_tblPerson">
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblSvar" Type="Self.tblSvar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSvar">
+              <PropertyRef Name="FK_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTilmelding_tblPerson">
+          <End Role="tblPerson" Type="Self.tblPerson" Multiplicity="0..1" />
+          <End Role="tblTilmelding" Type="Self.tblTilmelding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblTilmelding">
+              <PropertyRef Name="FK_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Category">
+          <End Role="tblProduktKategori" Type="Self.tblProduktKategori" Multiplicity="0..1" />
+          <End Role="tblProdukt" Type="Self.tblProdukt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProduktKategori">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblProdukt">
+              <PropertyRef Name="FK_ProductCategoryID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTag_tblSide">
+          <End Role="tblSide" Type="Self.tblSide" Multiplicity="0..1" />
+          <End Role="tblTag" Type="Self.tblTag" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSide">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblTag">
+              <PropertyRef Name="FK_Side" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSpm_tblType">
+          <End Role="tblType" Type="Self.tblType" Multiplicity="0..1" />
+          <End Role="tblSpm" Type="Self.tblSpm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSpm">
+              <PropertyRef Name="FK_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSvar_tblSpm">
+          <End Role="tblSpm" Type="Self.tblSpm" Multiplicity="0..1" />
+          <End Role="tblSvar" Type="Self.tblSvar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSpm">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSvar">
+              <PropertyRef Name="FK_Spm" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblValg_tblSpm">
+          <End Role="tblSpm" Type="Self.tblSpm" Multiplicity="0..1" />
+          <End Role="tblValg" Type="Self.tblValg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSpm">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblValg">
+              <PropertyRef Name="FK_Spm" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSponsor_tblSponsorType">
+          <End Role="tblSponsorType" Type="Self.tblSponsorType" Multiplicity="0..1" />
+          <End Role="tblSponsor" Type="Self.tblSponsor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSponsorType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSponsor">
+              <PropertyRef Name="FK_SponsorType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblValg_tblSvar">
+          <End Role="tblSvar" Type="Self.tblSvar" Multiplicity="0..1" />
+          <End Role="tblValg" Type="Self.tblValg" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSvar">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblValg">
+              <PropertyRef Name="FK_Svar_DetKorrekteSvar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Histories" EntityType="Self.History" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="tblAdmins" EntityType="Self.tblAdmin" />
+          <EntitySet Name="tblArtikels" EntityType="Self.tblArtikel" />
+          <EntitySet Name="tblBestyrelses" EntityType="Self.tblBestyrelse" />
+          <EntitySet Name="tblBilledes" EntityType="Self.tblBillede" />
+          <EntitySet Name="tblBillets" EntityType="Self.tblBillet" />
+          <EntitySet Name="tblEventRegions" EntityType="Self.tblEventRegion" />
+          <EntitySet Name="tblNyhedsbrevs" EntityType="Self.tblNyhedsbrev" />
+          <EntitySet Name="tblPersons" EntityType="Self.tblPerson" />
+          <EntitySet Name="tblProdukts" EntityType="Self.tblProdukt" />
+          <EntitySet Name="tblProduktKategoris" EntityType="Self.tblProduktKategori" />
+          <EntitySet Name="tblSides" EntityType="Self.tblSide" />
+          <EntitySet Name="tblSpms" EntityType="Self.tblSpm" />
+          <EntitySet Name="tblSponsors" EntityType="Self.tblSponsor" />
+          <EntitySet Name="tblSponsorTypes" EntityType="Self.tblSponsorType" />
+          <EntitySet Name="tblSteds" EntityType="Self.tblSted" />
+          <EntitySet Name="tblSvars" EntityType="Self.tblSvar" />
+          <EntitySet Name="tblTags" EntityType="Self.tblTag" />
+          <EntitySet Name="tblTilmeldings" EntityType="Self.tblTilmelding" />
+          <EntitySet Name="tblTjans" EntityType="Self.tblTjan" />
+          <EntitySet Name="tblTypes" EntityType="Self.tblType" />
+          <EntitySet Name="tblValgs" EntityType="Self.tblValg" />
+          <AssociationSet Name="FK_tblBillede_tblArtikel" Association="Self.FK_tblBillede_tblArtikel">
+            <End Role="tblArtikel" EntitySet="tblArtikels" />
+            <End Role="tblBillede" EntitySet="tblBilledes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblProdukt" Association="Self.FK_tblBillede_tblProdukt">
+            <End Role="tblProdukt" EntitySet="tblProdukts" />
+            <End Role="tblBillede" EntitySet="tblBilledes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblType" Association="Self.FK_tblBillede_tblType">
+            <End Role="tblType" EntitySet="tblTypes" />
+            <End Role="tblBillede" EntitySet="tblBilledes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPerson_tblBillet" Association="Self.FK_tblPerson_tblBillet">
+            <End Role="tblBillet" EntitySet="tblBillets" />
+            <End Role="tblPerson" EntitySet="tblPersons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPerson_tblEventRegion" Association="Self.FK_tblPerson_tblEventRegion">
+            <End Role="tblEventRegion" EntitySet="tblEventRegions" />
+            <End Role="tblPerson" EntitySet="tblPersons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblNyhedsbrev_tblPerson" Association="Self.FK_tblNyhedsbrev_tblPerson">
+            <End Role="tblPerson" EntitySet="tblPersons" />
+            <End Role="tblNyhedsbrev" EntitySet="tblNyhedsbrevs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPerson_tblSted" Association="Self.FK_tblPerson_tblSted">
+            <End Role="tblSted" EntitySet="tblSteds" />
+            <End Role="tblPerson" EntitySet="tblPersons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblPerson_tblTjans" Association="Self.FK_tblPerson_tblTjans">
+            <End Role="tblTjans" EntitySet="tblTjans" />
+            <End Role="tblPerson" EntitySet="tblPersons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSvar_tblPerson" Association="Self.FK_tblSvar_tblPerson">
+            <End Role="tblPerson" EntitySet="tblPersons" />
+            <End Role="tblSvar" EntitySet="tblSvars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTilmelding_tblPerson" Association="Self.FK_tblTilmelding_tblPerson">
+            <End Role="tblPerson" EntitySet="tblPersons" />
+            <End Role="tblTilmelding" EntitySet="tblTilmeldings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+            <End Role="tblProduktKategori" EntitySet="tblProduktKategoris" />
+            <End Role="tblProdukt" EntitySet="tblProdukts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTag_tblSide" Association="Self.FK_tblTag_tblSide">
+            <End Role="tblSide" EntitySet="tblSides" />
+            <End Role="tblTag" EntitySet="tblTags" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSpm_tblType" Association="Self.FK_tblSpm_tblType">
+            <End Role="tblType" EntitySet="tblTypes" />
+            <End Role="tblSpm" EntitySet="tblSpms" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSvar_tblSpm" Association="Self.FK_tblSvar_tblSpm">
+            <End Role="tblSpm" EntitySet="tblSpms" />
+            <End Role="tblSvar" EntitySet="tblSvars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblValg_tblSpm" Association="Self.FK_tblValg_tblSpm">
+            <End Role="tblSpm" EntitySet="tblSpms" />
+            <End Role="tblValg" EntitySet="tblValgs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSponsor_tblSponsorType" Association="Self.FK_tblSponsor_tblSponsorType">
+            <End Role="tblSponsorType" EntitySet="tblSponsorTypes" />
+            <End Role="tblSponsor" EntitySet="tblSponsors" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblValg_tblSvar" Association="Self.FK_tblValg_tblSvar">
+            <End Role="tblSvar" EntitySet="tblSvars" />
+            <End Role="tblValg" EntitySet="tblValgs" />
+          </AssociationSet>
+          <FunctionImport Name="sp_alterdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_creatediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="version" Mode="In" Type="Int32" />
+            <Parameter Name="definition" Mode="In" Type="Binary" />
+          </FunctionImport>
+          <FunctionImport Name="sp_dropdiagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(villadsclaes_dk_db_villadsModel.sp_helpdiagramdefinition_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(villadsclaes_dk_db_villadsModel.sp_helpdiagrams_Result)">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_renamediagram">
+            <Parameter Name="diagramname" Mode="In" Type="String" />
+            <Parameter Name="owner_id" Mode="In" Type="Int32" />
+            <Parameter Name="new_diagramname" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_upgraddiagrams" />
+          <AssociationSet Name="FK_tblSide_tblType" Association="villadsclaes_dk_db_villadsModel.FK_tblSide_tblType">
+            <End Role="tblType" EntitySet="tblTypes" />
+            <End Role="tblSide" EntitySet="tblSides" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblBestyrelse" Association="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblBestyrelse">
+            <End Role="tblBestyrelse" EntitySet="tblBestyrelses" />
+            <End Role="tblBillede" EntitySet="tblBilledes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblPerson" Association="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblPerson">
+            <End Role="tblPerson" EntitySet="tblPersons" />
+            <End Role="tblBillede" EntitySet="tblBilledes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblSide" Association="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblSide">
+            <End Role="tblSide" EntitySet="tblSides" />
+            <End Role="tblBillede" EntitySet="tblBilledes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblBillede_tblSponsor" Association="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblSponsor">
+            <End Role="tblSponsor" EntitySet="tblSponsors" />
+            <End Role="tblBillede" EntitySet="tblBilledes" />
+          </AssociationSet>
+          <EntitySet Name="tblEvents" EntityType="villadsclaes_dk_db_villadsModel.tblEvent" />
+          <AssociationSet Name="FK_tblBillede_tblEvent" Association="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblEvent">
+            <End Role="tblEvent" EntitySet="tblEvents" />
+            <End Role="tblBillede" EntitySet="tblBilledes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEvent_tblEventRegion" Association="villadsclaes_dk_db_villadsModel.FK_tblEvent_tblEventRegion">
+            <End Role="tblEventRegion" EntitySet="tblEventRegions" />
+            <End Role="tblEvent" EntitySet="tblEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEvent_tblSponsor" Association="villadsclaes_dk_db_villadsModel.FK_tblEvent_tblSponsor">
+            <End Role="tblSponsor" EntitySet="tblSponsors" />
+            <End Role="tblEvent" EntitySet="tblEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblEvent_tblType" Association="villadsclaes_dk_db_villadsModel.FK_tblEvent_tblType">
+            <End Role="tblType" EntitySet="tblTypes" />
+            <End Role="tblEvent" EntitySet="tblEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblTilmelding_tblEvent" Association="villadsclaes_dk_db_villadsModel.FK_tblTilmelding_tblEvent">
+            <End Role="tblEvent" EntitySet="tblEvents" />
+            <End Role="tblTilmelding" EntitySet="tblTilmeldings" />
+          </AssociationSet>
+        </EntityContainer>
+        <ComplexType Name="sp_helpdiagramdefinition_Result">
+          <Property Type="Int32" Name="version" Nullable="true" />
+          <Property Type="Binary" Name="definition" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_helpdiagrams_Result">
+          <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="OwnerID" Nullable="false" />
+        </ComplexType>
+        <Association Name="FK_tblSide_tblType">
+          <End Type="villadsclaes_dk_db_villadsModel.tblType" Role="tblType" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblSide" Role="tblSide" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblSide">
+              <PropertyRef Name="FK_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblBestyrelse">
+          <End Type="villadsclaes_dk_db_villadsModel.tblBestyrelse" Role="tblBestyrelse" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblBillede" Role="tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblBestyrelse">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Bestyrelse" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblPerson">
+          <End Type="villadsclaes_dk_db_villadsModel.tblPerson" Role="tblPerson" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblBillede" Role="tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblPerson">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Person" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblSide">
+          <End Type="villadsclaes_dk_db_villadsModel.tblSide" Role="tblSide" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblBillede" Role="tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSide">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Side" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblBillede_tblSponsor">
+          <End Type="villadsclaes_dk_db_villadsModel.tblSponsor" Role="tblSponsor" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblBillede" Role="tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSponsor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Sponsor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblEvent">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EventOverskrift" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="EventDato" Type="DateTime" Precision="3" />
+          <Property Name="EventBeskrivelse" Type="String" MaxLength="750" FixedLength="false" Unicode="true" />
+          <Property Name="EventPris" Type="Int32" />
+          <Property Name="EventPladser" Type="Int32" />
+          <Property Name="EventDistance" Type="Int32" />
+          <Property Name="FK_Region" Type="Int32" />
+          <Property Name="FK_Sponsor" Type="Int32" />
+          <Property Name="FK_Type" Type="Int32" />
+          <NavigationProperty Name="tblBilledes" Relationship="villadsclaes_dk_db_villadsModel.FK_tblBillede_tblEvent" FromRole="tblEvent" ToRole="tblBillede" />
+          <NavigationProperty Name="tblEventRegion" Relationship="villadsclaes_dk_db_villadsModel.FK_tblEvent_tblEventRegion" FromRole="tblEvent" ToRole="tblEventRegion" />
+          <NavigationProperty Name="tblSponsor" Relationship="villadsclaes_dk_db_villadsModel.FK_tblEvent_tblSponsor" FromRole="tblEvent" ToRole="tblSponsor" />
+          <NavigationProperty Name="tblType" Relationship="villadsclaes_dk_db_villadsModel.FK_tblEvent_tblType" FromRole="tblEvent" ToRole="tblType" />
+          <NavigationProperty Name="tblTilmeldings" Relationship="villadsclaes_dk_db_villadsModel.FK_tblTilmelding_tblEvent" FromRole="tblEvent" ToRole="tblTilmelding" />
+        </EntityType>
+        <Association Name="FK_tblBillede_tblEvent">
+          <End Type="villadsclaes_dk_db_villadsModel.tblEvent" Role="tblEvent" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblBillede" Role="tblBillede" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEvent">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblBillede">
+              <PropertyRef Name="FK_Event" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEvent_tblEventRegion">
+          <End Type="villadsclaes_dk_db_villadsModel.tblEventRegion" Role="tblEventRegion" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblEvent" Role="tblEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEventRegion">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblEvent">
+              <PropertyRef Name="FK_Region" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEvent_tblSponsor">
+          <End Type="villadsclaes_dk_db_villadsModel.tblSponsor" Role="tblSponsor" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblEvent" Role="tblEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblSponsor">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblEvent">
+              <PropertyRef Name="FK_Sponsor" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblEvent_tblType">
+          <End Type="villadsclaes_dk_db_villadsModel.tblType" Role="tblType" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblEvent" Role="tblEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblEvent">
+              <PropertyRef Name="FK_Type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblTilmelding_tblEvent">
+          <End Type="villadsclaes_dk_db_villadsModel.tblEvent" Role="tblEvent" Multiplicity="0..1" />
+          <End Type="villadsclaes_dk_db_villadsModel.tblTilmelding" Role="tblTilmelding" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblEvent">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="tblTilmelding">
+              <PropertyRef Name="FK_Event" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="villadsclaes_dk_db_villadsModelStoreContainer" CdmEntityContainer="DatabaseEntities">
+          <EntitySetMapping Name="Histories">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.History">
+              <MappingFragment StoreEntitySet="History">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="timestamp" ColumnName="timestamp" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="node_id" ColumnName="node_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblAdmins">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblAdmin">
+              <MappingFragment StoreEntitySet="tblAdmin">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Brugernavn" ColumnName="Brugernavn" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="BrugerEmail" ColumnName="BrugerEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblArtikels">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblArtikel">
+              <MappingFragment StoreEntitySet="tblArtikel">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ArtikelOverskrift" ColumnName="ArtikelOverskrift" />
+                <ScalarProperty Name="ArtikelTekst" ColumnName="ArtikelTekst" />
+                <ScalarProperty Name="ArtikelBannerBillede" ColumnName="ArtikelBannerBillede" />
+                <ScalarProperty Name="ArtikelManchetTekst" ColumnName="ArtikelManchetTekst" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblBestyrelses">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblBestyrelse">
+              <MappingFragment StoreEntitySet="tblBestyrelse">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MedlemsBillede" ColumnName="MedlemsBillede" />
+                <ScalarProperty Name="MedlemsNavn" ColumnName="MedlemsNavn" />
+                <ScalarProperty Name="MedlemsTitel" ColumnName="MedlemsTitel" />
+                <ScalarProperty Name="MedlemsBeskrivelse" ColumnName="MedlemsBeskrivelse" />
+                <ScalarProperty Name="MedlemsMail" ColumnName="MedlemsMail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblBilledes">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblBillede">
+              <MappingFragment StoreEntitySet="tblBillede">
+                <ScalarProperty Name="FK_Side" ColumnName="FK_Side" />
+                <ScalarProperty Name="FK_Sponsor" ColumnName="FK_Sponsor" />
+                <ScalarProperty Name="FK_Person" ColumnName="FK_Person" />
+                <ScalarProperty Name="FK_Bestyrelse" ColumnName="FK_Bestyrelse" />
+                <ScalarProperty Name="FK_Event" ColumnName="FK_Event" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="BilledeFil" ColumnName="BilledeFil" />
+                <ScalarProperty Name="BilledeAlternativTekst" ColumnName="BilledeAlternativTekst" />
+                <ScalarProperty Name="BilledeBeskrivelse" ColumnName="BilledeBeskrivelse" />
+                <ScalarProperty Name="BilledeOverskrift" ColumnName="BilledeOverskrift" />
+                <ScalarProperty Name="FK_Type" ColumnName="FK_Type" />
+                <ScalarProperty Name="FK_Artikel" ColumnName="FK_Artikel" />
+                <ScalarProperty Name="FK_Produkt" ColumnName="FK_Produkt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblBillets">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblBillet">
+              <MappingFragment StoreEntitySet="tblBillet">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="BilletType" ColumnName="BilletType" />
+                <ScalarProperty Name="BilletBeskrivelse" ColumnName="BilletBeskrivelse" />
+                <ScalarProperty Name="BilletAntalGlas" ColumnName="BilletAntalGlas" />
+                <ScalarProperty Name="BilletPris" ColumnName="BilletPris" />
+                <ScalarProperty Name="BilletLink" ColumnName="BilletLink" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblEventRegions">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblEventRegion">
+              <MappingFragment StoreEntitySet="tblEventRegion">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblNyhedsbrevs">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblNyhedsbrev">
+              <MappingFragment StoreEntitySet="tblNyhedsbrev">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FK_Person" ColumnName="FK_Person" />
+                <ScalarProperty Name="Emailadresse" ColumnName="Emailadresse" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblPersons">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblPerson">
+              <MappingFragment StoreEntitySet="tblPerson">
+                <ScalarProperty Name="AntalGangePersonenHarBesogtSiden" ColumnName="AntalGangePersonenHarBesogtSiden" />
+                <ScalarProperty Name="AdresseTilPerson" ColumnName="AdresseTilPerson" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="NavnTilPerson" ColumnName="NavnTilPerson" />
+                <ScalarProperty Name="TelefonnummerTilPerson" ColumnName="TelefonnummerTilPerson" />
+                <ScalarProperty Name="EmailTilPerson" ColumnName="EmailTilPerson" />
+                <ScalarProperty Name="BilledeAfPerson" ColumnName="BilledeAfPerson" />
+                <ScalarProperty Name="RSVP" ColumnName="RSVP" />
+                <ScalarProperty Name="SamtykkeTilDenneListe" ColumnName="SamtykkeTilDenneListe" />
+                <ScalarProperty Name="FK_HvorKenderViPersonenFra" ColumnName="FK_HvorKenderViPersonenFra" />
+                <ScalarProperty Name="MedlemsskabAfForetagsomheden" ColumnName="MedlemsskabAfForetagsomheden" />
+                <ScalarProperty Name="BidragTilAuktionen" ColumnName="BidragTilAuktionen" />
+                <ScalarProperty Name="BidragTilSneglebingo" ColumnName="BidragTilSneglebingo" />
+                <ScalarProperty Name="BidragTilForberedelse" ColumnName="BidragTilForberedelse" />
+                <ScalarProperty Name="FK_TjansUnderEvent" ColumnName="FK_TjansUnderEvent" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="HashetLink" ColumnName="HashetLink" />
+                <ScalarProperty Name="FK_BilletType" ColumnName="FK_BilletType" />
+                <ScalarProperty Name="AlderAfPerson" ColumnName="AlderAfPerson" />
+                <ScalarProperty Name="LoebeDistanceForPerson" ColumnName="LoebeDistanceForPerson" />
+                <ScalarProperty Name="FK_Region_Hjemstavn" ColumnName="FK_Region_Hjemstavn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblProdukts">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblProdukt">
+              <MappingFragment StoreEntitySet="tblProdukt">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Navn" ColumnName="Navn" />
+                <ScalarProperty Name="Beskrivelse" ColumnName="Beskrivelse" />
+                <ScalarProperty Name="Pris" ColumnName="Pris" />
+                <ScalarProperty Name="Antal" ColumnName="Antal" />
+                <ScalarProperty Name="FK_ProductCategoryID" ColumnName="FK_ProductCategoryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblProduktKategoris">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblProduktKategori">
+              <MappingFragment StoreEntitySet="tblProduktKategori">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Kategori" ColumnName="Kategori" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSides">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblSide">
+              <MappingFragment StoreEntitySet="tblSide">
+                <ScalarProperty Name="FK_Type" ColumnName="FK_Type" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="SideTitel" ColumnName="SideTitel" />
+                <ScalarProperty Name="SideBeskrivelse" ColumnName="SideBeskrivelse" />
+                <ScalarProperty Name="SideOprettelsesDato" ColumnName="SideOprettelsesDato" />
+                <ScalarProperty Name="SideLink" ColumnName="SideLink" />
+                <ScalarProperty Name="SideBillede" ColumnName="SideBillede" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSpms">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblSpm">
+              <MappingFragment StoreEntitySet="tblSpm">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Spm" ColumnName="Spm" />
+                <ScalarProperty Name="FK_Type" ColumnName="FK_Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSponsors">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblSponsor">
+              <MappingFragment StoreEntitySet="tblSponsor">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="SponsorNavn" ColumnName="SponsorNavn" />
+                <ScalarProperty Name="SponsorLogo" ColumnName="SponsorLogo" />
+                <ScalarProperty Name="FK_SponsorType" ColumnName="FK_SponsorType" />
+                <ScalarProperty Name="SponsorLogoAlternativtekst" ColumnName="SponsorLogoAlternativtekst" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSponsorTypes">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblSponsorType">
+              <MappingFragment StoreEntitySet="tblSponsorType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="SponsorType" ColumnName="SponsorType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSteds">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblSted">
+              <MappingFragment StoreEntitySet="tblSted">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="HvorKenderViPersonenFra" ColumnName="HvorKenderViPersonenFra" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSvars">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblSvar">
+              <MappingFragment StoreEntitySet="tblSvar">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="FK_Person" ColumnName="FK_Person" />
+                <ScalarProperty Name="FK_Spm" ColumnName="FK_Spm" />
+                <ScalarProperty Name="Svar" ColumnName="Svar" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTags">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblTag">
+              <MappingFragment StoreEntitySet="tblTag">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Tag" ColumnName="Tag" />
+                <ScalarProperty Name="FK_Side" ColumnName="FK_Side" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTilmeldings">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblTilmelding">
+              <MappingFragment StoreEntitySet="tblTilmelding">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="TilmeldteEmail" ColumnName="TilmeldteEmail" />
+                <ScalarProperty Name="FK_Event" ColumnName="FK_Event" />
+                <ScalarProperty Name="FK_Person" ColumnName="FK_Person" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTjans">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblTjan">
+              <MappingFragment StoreEntitySet="tblTjans">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="TjansUnderEvent" ColumnName="TjansUnderEvent" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblTypes">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblType">
+              <MappingFragment StoreEntitySet="tblType">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblValgs">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblValg">
+              <MappingFragment StoreEntitySet="tblValg">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Valg" ColumnName="Valg" />
+                <ScalarProperty Name="FK_Spm" ColumnName="FK_Spm" />
+                <ScalarProperty Name="FK_Svar_DetKorrekteSvar" ColumnName="FK_Svar_DetKorrekteSvar" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="villadsclaes_dk_db_villadsModel.Store.sp_alterdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="villadsclaes_dk_db_villadsModel.Store.sp_creatediagram" />
+          <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="villadsclaes_dk_db_villadsModel.Store.sp_dropdiagram" />
+          <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="villadsclaes_dk_db_villadsModel.Store.sp_helpdiagramdefinition">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="villadsclaes_dk_db_villadsModel.sp_helpdiagramdefinition_Result">
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="villadsclaes_dk_db_villadsModel.Store.sp_helpdiagrams">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="villadsclaes_dk_db_villadsModel.sp_helpdiagrams_Result">
+                <ScalarProperty Name="Database" ColumnName="Database" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Owner" ColumnName="Owner" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="villadsclaes_dk_db_villadsModel.Store.sp_renamediagram" />
+          <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="villadsclaes_dk_db_villadsModel.Store.sp_upgraddiagrams" />
+          <EntitySetMapping Name="tblEvents">
+            <EntityTypeMapping TypeName="villadsclaes_dk_db_villadsModel.tblEvent">
+              <MappingFragment StoreEntitySet="tblEvent">
+                <ScalarProperty Name="FK_Type" ColumnName="FK_Type" />
+                <ScalarProperty Name="FK_Sponsor" ColumnName="FK_Sponsor" />
+                <ScalarProperty Name="FK_Region" ColumnName="FK_Region" />
+                <ScalarProperty Name="EventDistance" ColumnName="EventDistance" />
+                <ScalarProperty Name="EventPladser" ColumnName="EventPladser" />
+                <ScalarProperty Name="EventPris" ColumnName="EventPris" />
+                <ScalarProperty Name="EventBeskrivelse" ColumnName="EventBeskrivelse" />
+                <ScalarProperty Name="EventDato" ColumnName="EventDato" />
+                <ScalarProperty Name="EventOverskrift" ColumnName="EventOverskrift" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

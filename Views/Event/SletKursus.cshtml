@@ -1,0 +1,116 @@
+﻿@model Anemette.Models.tblEvent
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Slet Kursus</title>
+</head>
+<body>
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>tblEvent</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.EventOverskrift)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventOverskrift)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventDato)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventDato)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventBeskrivelse)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventBeskrivelse)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventPris)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventPris)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventPladser)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventPladser)
+            </dd>
+
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventDistance)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventDistance)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.tblEventRegion.Region)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.tblEventRegion.Region)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.tblSponsor.SponsorNavn)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.tblSponsor.SponsorNavn)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.tblType.Type)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.tblType.Type)
+            </dd>
+
+            <dt>Billede</dt>
+            <dd>
+                @foreach (var item in Model.tblBilledes.Where(b => b.FK_Event == Model.ID))
+                {
+                    <img src="~/Uploads/@item.BilledeFil" width="200" alt="Billede af @item.BilledeAlternativTekst" />
+
+                }
+                @*<img src="~/Uploads/@Model.tblBilledes.Where(b => b.FK_Produkt == Model.ID).FirstOrDefault().BilledeFil" width="200" alt="Billede af @Model.tblBilledes.Where(b => b.FK_Produkt == Model.ID).FirstOrDefault().BilledeAlternativTekst" />*@
+            </dd>
+
+        </dl>
+    
+        @using (Html.BeginForm()) {
+            @Html.AntiForgeryToken()
+    
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+    </div>
+</body>
+</html>

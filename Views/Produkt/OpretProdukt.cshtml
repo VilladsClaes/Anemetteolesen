@@ -1,0 +1,109 @@
+﻿@model Anemette.Models.tblProdukt
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm("OpretProdukt", "Produkt", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    //@Html.AntiForgeryToken() then generates an anti-forgery token, which is checked for a match by the POST version of the Create method (using the [ValidateAntiForgeryToken] attribute).
+    @Html.AntiForgeryToken()
+
+
+<div class="form-horizontal">
+    <h4>tblProdukt</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    @* @Html.ValidationSummary(true, “”, new { @class = “text-danger”}) is a helper that will display an error summary if for any reason the form is not valid. The first parameter tells the summary to exclude any property errors*@
+    <div class="form-group">
+        @Html.LabelFor(model => model.Navn, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Navn, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Navn, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Beskrivelse, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Beskrivelse, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Beskrivelse, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Pris, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @*  This is a big improvement on our default view and the validation applied to it; however, there are still some issues. The price input still displays a default error message when a number is not entered, which can be fixed in a couple of ways.
+                 One way to fix this is to overwrite the data-val-number HTML attribute by modifying the EditorFor code for the price field. You do this by passing in a new HTML attribute, as follows: *@
+            @Html.EditorFor(model => model.Pris, new { htmlAttributes = new { @class = "form-control", data_val_number = "Prisen skal være et tal." } })
+            @Html.ValidationMessageFor(model => model.Pris, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Antal, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Antal, new { htmlAttributes = new { @class = "form-control" } })
+            @* This adds a specific validation message for the property if the user enters an incorrect value based on the validation rules set in the application. *@
+            @Html.ValidationMessageFor(model => model.Antal, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    @* ------------------------------------------Produktkategori------------------------------------------------ *@
+    <div class="form-group">
+        @Html.LabelFor(model => model.FK_ProductCategoryID, "Produktkategori", htmlAttributes: new { @class = "control-label col-md-2" })@Html.ActionLink("Opret ny kategori", "OpretKategori")
+        <div class="col-md-8">
+            @Html.DropDownList("FK_ProductCategoryID", null, "Vælg en kategori", htmlAttributes: new { @class = "form-control" })
+            @* Tilføj ny kategori *@
+
+            @Html.ValidationMessageFor(model => model.FK_ProductCategoryID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    @* ------------------------------------------Produktbillede------------------------------------------------ *@
+    @{
+        //Anemette.Models.tblBillede nytbillede = new Anemette.Models.tblBillede();
+    }
+    <div class="form-group">
+        Billede af produkt
+
+        <div class="col-md-10">
+
+            @* Indsæt billede *@
+            <small class="control-label col-md-2">@ViewBag.Billede</small>
+            <label for="SamlingAfBilleder">Vælg et billede</label>
+            @* Attributten multiple tillader at vælge flere billeder pr upload. Derfor skal der laves en foreach i controlleren som løber samlingen igennem *@
+            <input type="file" multiple name="SamlingAfBilleder" id="SamlingAfBilleder" class="form-control" />
+            <span class="text-danger">@ViewBag.Besked</span>
+
+
+            @*@Html.LabelFor(model => model.Files, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.TextBoxFor(model => model.Files, new { type = "file", multiple = "" })
+                @Html.ValidationMessageFor(model => model.Files, "", new { @class = "text-danger" })*@
+
+
+        </div>
+
+    </div>
+
+
+
+
+    <div class="form-group">
+        <div class="col-md col-md-10">
+            <input type="submit" value="Create" class="btn btn-outline-dark" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
