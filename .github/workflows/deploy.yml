@@ -82,6 +82,7 @@ jobs:
           protocol: ftps
           local-dir: ./${{ env.PUBLISH_DIR }}/
           server-dir: /anemetteolesen.dk/
+          timeout: 600000
           exclude: |
             **/.git*
             **/.git*/**
