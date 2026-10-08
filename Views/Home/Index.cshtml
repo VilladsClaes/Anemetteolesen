@@ -17,9 +17,18 @@
                 @{
                     //Tilfældig bog; fremhævning
                     Anemette.Models.tblProdukt RandomBog = new Anemette.Models.tblProdukt();
-                    RandomBog = db.tblProdukts.Where(j => j.tblProduktKategori.ID == 1 && j.Navn.Length > 2 || j.Antal.Value > 0).OrderBy(j => Guid.NewGuid()).FirstOrDefault();
+                    //Vælg en tilfældig bog ved at springe et tilfældigt antal over (virker på både MySQL og MSSQL)
+                    var bogKandidater = db.tblProdukts.Where(j => j.tblProduktKategori.ID == 1 && j.Navn.Length > 2 || j.Antal.Value > 0);
+                    var antalKandidater = bogKandidater.Count();
+                    RandomBog = antalKandidater == 0 ? null : bogKandidater.OrderBy(j => j.ID).Skip(new Random().Next(antalKandidater)).FirstOrDefault();
                 }
-                @if (RandomBog.tblBilledes.Where(b => b.FK_Produkt == RandomBog.ID).Any())
+                @if (RandomBog == null)
+                {
+                    <div class="card-body"><h5 class="card-title">Bøgerne er på vej</h5></div>
+                }
+                else
+                {
+                if (RandomBog.tblBilledes.Where(b => b.FK_Produkt == RandomBog.ID).Any())
                 {
                     <img class="card-img-top " src="~/Uploads/@RandomBog.tblBilledes.Where(b => b.FK_Produkt == RandomBog.ID).FirstOrDefault().BilledeFil" alt="Card image cap">
 
@@ -37,6 +46,7 @@
                         @RandomBog.Beskrivelse
                     </p>
                 </div>
+                }
                 <div class="card-footer">
 
                     @{
