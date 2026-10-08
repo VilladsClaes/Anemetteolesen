@@ -72,6 +72,20 @@ jobs:
           "@
           Set-Content -Path "$env:PUBLISH_DIR/Secrets.config" -Value $secrets.Trim() -Encoding utf8
 
+      # IIS låser DLL'erne i bin/ mens sitet kører. app_offline.htm får IIS til at stoppe appen under upload.
+      - name: Take site offline
+        if: github.event_name != 'pull_request'
+        shell: pwsh
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          Set-Content app_offline.htm '<!doctype html><meta charset="utf-8"><title>Opdateres</title><p>Siden opdateres - prøv igen om et øjeblik.</p>' -Encoding utf8
+          curl.exe --fail --silent --show-error --ssl-reqd --user "${env:FTP_USERNAME}:${env:FTP_PASSWORD}" -T app_offline.htm "ftp://$($env:FTP_SERVER)/anemetteolesen.dk/app_offline.htm"
+          if ($LASTEXITCODE -ne 0) { throw "Kunne ikke uploade app_offline.htm" }
+          Start-Sleep -Seconds 15
+
       - name: Deploy over FTP
         if: github.event_name != 'pull_request'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -88,3 +102,13 @@ jobs:
             **/.git*/**
             **/.github/**
             **/Uploads/**
+
+      - name: Bring site online
+        if: always() && github.event_name != 'pull_request'
+        shell: pwsh
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          curl.exe --fail --silent --show-error --ssl-reqd --user "${env:FTP_USERNAME}:${env:FTP_PASSWORD}" -Q "DELE /anemetteolesen.dk/app_offline.htm" "ftp://$($env:FTP_SERVER)/"
