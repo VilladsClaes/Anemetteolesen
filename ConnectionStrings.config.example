@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Kopiér til ConnectionStrings.config og udfyld server, database, bruger og adgangskode.
+<!-- Kopiér til ConnectionStrings.config og udfyld MySQL-server, database, bruger og adgangskode.
      ConnectionStrings.config må ALDRIG committes (den står i .gitignore). -->
 <connectionStrings>
-  <add name="DatabaseEntities" connectionString="metadata=res://*/Models.AnemetteModel.csdl|res://*/Models.AnemetteModel.ssdl|res://*/Models.AnemetteModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=SERVER;initial catalog=DATABASE;user id=BRUGER;password=KODEORD;connect timeout=50;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+  <add name="DatabaseEntities" connectionString="server=mysqlXX.unoeuro.com;database=DATABASE;user id=BRUGER;password=KODEORD;CharSet=utf8mb4;SslMode=Preferred" providerName="MySql.Data.MySqlClient" />
 </connectionStrings>

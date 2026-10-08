@@ -5,7 +5,7 @@ Kildekode til [www.anemetteolesen.dk](https://www.anemetteolesen.dk) – en hjem
 ## Teknologi
 
 - ASP.NET MVC 5 / Razor
-- Entity Framework 6
+- Entity Framework 6 (Code First mod MySQL via MySql.Data.EntityFramework)
 - Bootstrap 4 / jQuery
 
 ## Udvikling
@@ -18,8 +18,11 @@ Kildekode til [www.anemetteolesen.dk](https://www.anemetteolesen.dk) – en hjem
 
 ## Database
 
-`Database/Anemette-schema.sql` opretter alle tabeller (genereret ud fra `Models/AnemetteModel.edmx`).
-Kør det mod en tom SQL Server-database, fx i SSMS. Scriptet kan køres flere gange uden skade.
+Sitet bruger en MySQL-database på webhotellet (webhotellets ene MSSQL-database bruges til andet).
+Datamodellen er beskrevet i `Models/DatabaseEntities.cs`.
+
+`Database/Anemette-mysql.sql` opretter alle tabeller. Kør det én gang på en tom MySQL-database,
+fx i phpMyAdmin under fanen **SQL**.
 
 Den første administrator oprettes ved at gå til `/Admin/OpretAdministrator`, mens der endnu ikke
 findes nogen administratorer. Derefter kræver siden login (`/Home/Login`).
@@ -37,7 +40,7 @@ Følgende repository secrets skal være sat under **Settings → Secrets and var
 | `FTP_SERVER`           | FTP-serverens adresse, fx `ftp.simply.com`                                   |
 | `FTP_USERNAME`         | FTP-brugernavn                                                               |
 | `FTP_PASSWORD`         | FTP-adgangskode                                                              |
-| `DB_CONNECTION_STRING` | SQL-forbindelse, fx `data source=mssqlXX.unoeuro.com;initial catalog=DB;user id=BRUGER;password=KODE` |
+| `DB_CONNECTION_STRING` | MySQL-forbindelse, fx `server=mysqlXX.unoeuro.com;database=DB;user id=BRUGER;password=KODE;CharSet=utf8mb4` |
 | `SMTP_USER`            | Mailkonto som kontaktformular/bestillinger sendes fra (valgfri)              |
 | `SMTP_PASSWORD`        | Adgangskode til mailkontoen (valgfri)                                        |
 

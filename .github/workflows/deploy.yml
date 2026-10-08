@@ -56,11 +56,10 @@ jobs:
             throw "Secret DB_CONNECTION_STRING mangler - sitet kan ikke køre uden database. Se README.md."
           }
           function Esc([string]$s) { [System.Security.SecurityElement]::Escape($s) }
-          $ef = "metadata=res://*/Models.AnemetteModel.csdl|res://*/Models.AnemetteModel.ssdl|res://*/Models.AnemetteModel.msl;provider=System.Data.SqlClient;provider connection string=`"$($env:DB_CONNECTION_STRING);MultipleActiveResultSets=True;App=EntityFramework`""
           $cs = @"
           <?xml version="1.0" encoding="utf-8"?>
           <connectionStrings>
-            <add name="DatabaseEntities" connectionString="$(Esc $ef)" providerName="System.Data.EntityClient" />
+            <add name="DatabaseEntities" connectionString="$(Esc $env:DB_CONNECTION_STRING)" providerName="MySql.Data.MySqlClient" />
           </connectionStrings>
           "@
           Set-Content -Path "$env:PUBLISH_DIR/ConnectionStrings.config" -Value $cs.Trim() -Encoding utf8
