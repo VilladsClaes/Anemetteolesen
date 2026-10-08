@@ -8,6 +8,7 @@
 
 <div class="container" id="kontaktformular">
     <form id="formular"  action="/Home/ContactForm" method="post">
+        @Html.AntiForgeryToken()
         <h3>@ViewBag.Titlet</h3>
         <h4>
            

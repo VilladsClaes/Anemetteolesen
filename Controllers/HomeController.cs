@@ -53,6 +53,7 @@ namespace Anemette.Controllers
 
         //Loginformular POST (ved tryk på log in)
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(tblAdmin bruger, FormCollection MinformCollection)
         {
             //Bliv på siden hvis model-validering ikke opnås
@@ -172,6 +173,7 @@ namespace Anemette.Controllers
 
       
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PlacerOrdre(ViewModel Bestilling)      
         {
 
@@ -320,6 +322,7 @@ namespace Anemette.Controllers
 
         //The [HttpPost] attribute tells the controller that when it receives a POST request for the Create action, it should use this method rather than the other create method.
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ContactForm(Anemette.Models.MailViewModel skrevneMail)
         {
             if (ModelState.IsValid)

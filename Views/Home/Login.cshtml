@@ -6,6 +6,7 @@
 
 <div class="container p-5 bg-light text-center mt-5">
     <form action="/Home/Login" method="post" class="border px-5 py-3">
+        @Html.AntiForgeryToken()
         @* Her kommer beskeder fra controlleren til viewet *@
         <span class="alert-info p-2">@ViewBag.Besked</span>
         <div>

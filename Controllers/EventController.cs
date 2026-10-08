@@ -256,7 +256,8 @@ namespace Anemette.Controllers
         }
 
         // POST: Event/Delete/5
-        [HttpPost, ActionName("SletKursus")]        
+        [HttpPost, ActionName("SletKursus")]
+        [ValidateAntiForgeryToken]        
         [AdminAdgang]
         public ActionResult DeleteConfirmed(int id)
         {
