@@ -60,3 +60,7 @@ UpgradeLog*.htm
 
 .idea/
 *.sln.iml
+
+# Hemmeligheder (adgangskoder) - skrives af GitHub Actions paa serveren
+ConnectionStrings.config
+Secrets.config

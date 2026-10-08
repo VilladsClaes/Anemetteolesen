@@ -6,26 +6,15 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Anemette.Filters;
 using Anemette.Models;
 
 namespace Anemette.Controllers
 {
+    //Tillad kun indgang hvis administratoren er logget ind
+    [AdminAdgang]
     public class AdminController : Controller
     {
-
-
-        //Tillad kun indgang hvis der er en cookie oprettet
-        protected override void OnActionExecuted(ActionExecutedContext filterContext)
-        {
-
-            if (Session["LoginBruger"] == null)
-            {
-                filterContext.Result = new RedirectResult("/Home/Login");
-                ViewBag.Besked = "Du er ikke logget ind";
-            }
-        }
-
-  
         private DatabaseEntities db = new DatabaseEntities();
 
 
@@ -70,32 +59,43 @@ namespace Anemette.Controllers
 
 
 
+        //Den allerførste administrator må oprettes uden login (når databasen er tom). Derefter kræves login.
+        private bool MaaOpretteAdministrator()
+        {
+            return Session["LoginBruger"] != null || !db.tblAdmins.Any();
+        }
+
         //Sidevisning til Opret ny bruger
+        [OverrideActionFilters]
         public ActionResult OpretAdministrator()
         {
-            //Hvis man ikke er logget ind kan man ikke se denne side
-            if (Session["LoginBruger"] == null)
+            if (!MaaOpretteAdministrator())
             {
-                return RedirectToAction("Index");
+                return Redirect("/Home/Login");
             }
             tblAdmin NyBruger = new tblAdmin();
 
             return View(NyBruger);
         }
 
-        //Oprettelse med formular(POST) til ny bruger       
+        //Oprettelse med formular(POST) til ny bruger
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult OpretAdministrator([Bind(Include = "ID,Brugernavn,Password,Salt,BrugerEmail")] tblAdmin nybruger)
+        [OverrideActionFilters]
+        public ActionResult OpretAdministrator([Bind(Include = "Brugernavn,Password,BrugerEmail")] tblAdmin nybruger)
         {
+            if (!MaaOpretteAdministrator())
+            {
+                return Redirect("/Home/Login");
+            }
 
             if (ModelState.IsValid)
             {
-                var isEmailAlreadyExists = db.tblAdmins.Any(x => x.BrugerEmail == nybruger.BrugerEmail);
+                var isEmailAlreadyExists = db.tblAdmins.Any(x => x.BrugerEmail == nybruger.BrugerEmail || x.Brugernavn == nybruger.Brugernavn);
                 if (isEmailAlreadyExists)
                 {
-                    TempData["Oprettet"] = "Der er allerede en bruger med denne email";
-                    return PartialView(nybruger);
+                    ViewBag.Besked = "Der er allerede en bruger med dette brugernavn eller denne email";
+                    return View(nybruger);
                 }
                 string NewSalt = HashSalt.GetRandomSalt();
                 nybruger.Salt = NewSalt;
@@ -104,6 +104,11 @@ namespace Anemette.Controllers
                 db.tblAdmins.Add(nybruger);
                 db.SaveChanges();
                 ViewBag.Besked = "Du har nu oprettet din profil";
+                //Den første administrator er ikke logget ind endnu og sendes til login
+                if (Session["LoginBruger"] == null)
+                {
+                    return Redirect("/Home/Login");
+                }
                 return RedirectToAction("Index", "Admin");
             }
             ViewBag.Besked = "Noget gik galt med din oprettelse";

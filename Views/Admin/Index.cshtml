@@ -28,12 +28,10 @@
             Der er <span class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;">@Model.DeltagerTilmeldings.Count </span> deltagere på alle events
         </p>
 
-        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("Create", "Bestyrelse")">Opret nyt bestyrelsesmedlem</a>
-        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("Create", "Event")">Opret nyt løbeevent</a>
-        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("OpretBruger", "Login")">Opret ny webadministrator</a>
-        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("Index", "Nyhedsbrev")">Se mailinglist</a>
-        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("Create", "Sponsor")">Tilføj sponsor</a>
-        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("Create", "Tilmelding")">Opret ny eventdeltager</a>
+        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("OpretProdukt", "Produkt")">Opret nyt produkt</a>
+        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("OpretKategori", "Produkt")">Opret ny produktkategori</a>
+        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("Index", "Produkt")">Se alle produkter</a>
+        <a class="btn text-uppercase text-white rounded-0" style="background-color: #cb4046; font-weight: 800; color: white !important;" href="@Url.Action("Logud", "Admin")">Log ud</a>
     </div>
 
 @Html.Action("_AdministratorListe")

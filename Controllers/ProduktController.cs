@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 //Vi bruger den mappe der hedder Models. Heri ligger også ViewModels. Hvis de havde ligget i en mappe for sig, skulle vi have skrevet "using Anemette.ViewModels";
+using Anemette.Filters;
 using Anemette.Models;
 using PagedList;
 using static Anemette.Models.SoegeViewModel;
@@ -182,6 +183,7 @@ namespace Anemette.Controllers
         }
 
         // GET: ProduktKategori/Create
+        [AdminAdgang]
         public ActionResult OpretProdukt()
         {
             //Tilknyt produkt til kategori med dropdownmenu i View
@@ -197,6 +199,7 @@ namespace Anemette.Controllers
         //[ValidateAntiForgeryToken] ensures that the token passed by the HTML form, thus validating the request. The purpose of this is to ensure that the request actually came from the form it is expected to come from in order to prevent cross-site request forgeries. In simple terms, a cross-site request forgery is a request from a form on another web site to your web site with malicious intentions.
         [ValidateAntiForgeryToken]
         //The parameters ([Bind(Include = “ID,Name”)] Category category) tell the method to include only the ID and the Name properties when adding a new category. The Bind attribute is used to protect against overposting attacks by creating a list of safe properties to update; however, as we will discuss later, it does not work as expected and so it is safer to use a different method for editing or creating where some values may be blank. As an example of overposting, consider a scenario where the price is submitted as part of the request when a user submits an order for a product. An overposting attack would attempt to alter this price data by changing the submitted request data in an attempt to buy the product cheaper.
+        [AdminAdgang]
         public ActionResult OpretProdukt([Bind(Include = "ID,Navn,Beskrivelse,Pris,Antal,FK_ProductCategoryID")] IEnumerable<HttpPostedFileBase> SamlingAfBilleder, tblProdukt NytProdukt)
         {
             if (ModelState.IsValid)
@@ -318,6 +321,7 @@ namespace Anemette.Controllers
 
 
 
+        [AdminAdgang]
         public ActionResult OpretKategori()
         {
             
@@ -331,6 +335,7 @@ namespace Anemette.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminAdgang]
         public ActionResult OpretKategori([Bind(Include = "ID,Kategori")] tblProduktKategori tblProduktKategori)
         {
             if (ModelState.IsValid)
@@ -357,6 +362,7 @@ namespace Anemette.Controllers
 
 
         // GET: Produkt/Edit/5
+        [AdminAdgang]
         public ActionResult EditProdukt(int? id)
         {
             if (id == null)
@@ -377,6 +383,7 @@ namespace Anemette.Controllers
         // POST: Produkt/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminAdgang]
         public ActionResult EditProdukt([Bind(Include = "ID,Navn,Beskrivelse,Pris,Antal,FK_ProductCategoryID")] IEnumerable<HttpPostedFileBase> SamlingAfBilleder, tblProdukt EditeretProdukt)
         {
             if (ModelState.IsValid)
@@ -468,6 +475,7 @@ namespace Anemette.Controllers
 
         // GET: Produkt/Delete/5
         
+        [AdminAdgang]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -487,6 +495,7 @@ namespace Anemette.Controllers
         //There are several reasons why ASP.NET takes this approach to disallow a GET request to update the database and several comments and debates about the different reasons about the security of doing so; however, one of the key reasons for not doing it is that a search engine spider will crawl public hyperlinks in your web site and potentially be able to delete all the records if there is an unauthenticated link to delete records. Later we will add security to editing categories so that this becomes a moot point.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AdminAdgang]
         public ActionResult DeleteConfirmed(int id)
         {
 
@@ -503,11 +512,16 @@ namespace Anemette.Controllers
             //    p.FK_ProductCategoryID = null;
             //}
 
-            tblBillede billedet = db.tblBilledes.Where(b => b.FK_Produkt == tblProdukt.ID).FirstOrDefault();
+            if (tblProdukt == null)
+            {
+                return HttpNotFound();
+            }
+
+            //Fjern alle billed-rækker til produktet (et produkt kan have ingen eller flere billeder)
             //Slet billederne fysisk
             //System.IO.File.Delete(Request.MapPath(Konstanter.BilledemappeSti + billedet.BilledeFil));
             //System.IO.File.Delete(Request.MapPath(Konstanter.ThumbnailSti + billedet.BilledeFil));
-            db.tblBilledes.Remove(billedet);
+            db.tblBilledes.RemoveRange(db.tblBilledes.Where(b => b.FK_Produkt == tblProdukt.ID));
             db.tblProdukts.Remove(tblProdukt);
             db.SaveChanges();
             return RedirectToAction("Index");
