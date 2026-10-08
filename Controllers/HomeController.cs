@@ -82,9 +82,9 @@ namespace Anemette.Controllers
             if (BrugerMatch != null)
             {
                 //Opret en session-fil med den indloggede bruger. Dette skal bruges til at tjekke adgang på alle Admin-sider
-                Session["LoginBruger"] = bruger.Brugernavn;
-                //Opret en anden sessionsfil. 
-                Session["BrugerID"] = bruger.ID;
+                Session["LoginBruger"] = BrugerMatch.Brugernavn;
+                //Opret en anden sessionsfil med brugerens ID fra databasen (formularen indeholder ikke ID)
+                Session["BrugerID"] = BrugerMatch.ID;
                 ViewBag.Besked = "Du er nu logget ind";
 
                 //Response.Redirect("");
@@ -268,29 +268,6 @@ namespace Anemette.Controllers
 
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult OpretBruger(tblAdmin User)
-        {
-           
-
-            tblAdmin newUser = db.tblAdmins.Where(c => c.BrugerEmail == User.BrugerEmail).FirstOrDefault();
-            if (newUser != null)
-            {
-                ViewBag.Besked = "Der er allerede oprette en bruger med denne email - gå til login istedet";
-                return View();
-            }
-
-            string NewSalt = HashSalt.GetRandomSalt();
-            User.Salt = NewSalt;
-            User.Password = HashSalt.HashPassword(User.Password, NewSalt);
-
-            db.tblAdmins.Add(User);
-            db.SaveChanges();
-            return RedirectToAction("Index", "Login");
-
-
-        }
 
 
 
@@ -401,9 +378,6 @@ namespace Anemette.Controllers
             //.net biblioteket Mail med klassen Mailmessage 
             MailMessage mail = new MailMessage();
 
-            // From er = mailens afsender. Det er ikke mailens afsender når vi bruger gmails smtp, CHeck ved webhost.
-            mail.From = new MailAddress(myMail.MailAdressFrom);
-
             //Dette er den mail som man besvare til (tilbage til kd efter kontakt med hjemmeside staf(input MailFrom i Contact form))
             mail.ReplyToList.Add(myMail.MailAdressFrom);
 
@@ -421,21 +395,20 @@ namespace Anemette.Controllers
             //"smtp" er en instans af smtpClient,  Smtp = simpel mail transport protocol
             SmtpClient smtp = new SmtpClient();
 
-            //host er udbyderen udgående mailserver.
-            //her er der gmails smtp og port.
-            //tjek med webhost........!
-            smtp.Host = "smtp.gmail.com";
-            smtp.Port = 587;
+            //Mailserver og login læses fra appSettings (Secrets.config på serveren), så de ikke ligger i koden på GitHub
+            var indstillinger = System.Configuration.ConfigurationManager.AppSettings;
+            smtp.Host = indstillinger["SmtpHost"];
+            smtp.Port = int.Parse(indstillinger["SmtpPort"] ?? "587");
 
-            //ssl er nøjvendigt  for gmail - tjek med udbyder..
             smtp.EnableSsl = true;
 
-            //Her slår vi standart longi-oplysningerne fra.. 
+            //Her slår vi standart longi-oplysningerne fra..
             smtp.UseDefaultCredentials = false;
 
-            //her skriver vi vores login oplysninger.
-            //Tilføj tilladelse på https://myaccount.google.com/u/1/lesssecureapps
-            smtp.Credentials = new System.Net.NetworkCredential("skarresoehusx@gmail.com", "ballevej28");
+            smtp.Credentials = new System.Net.NetworkCredential(indstillinger["SmtpBruger"], indstillinger["SmtpKodeord"]);
+
+            //Mailserveren tillader kun at sende fra egen konto - kundens adresse står i Reply-To
+            mail.From = new MailAddress(indstillinger["SmtpBruger"]);
 
             //Her pakker vi hele instansen(alt data tastet ovenfor) "mail" ned som parameter til metoden send.
             smtp.Send(mail);

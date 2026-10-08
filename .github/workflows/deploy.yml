@@ -1,12 +1,20 @@
 name: Build and deploy to webhotel
 
+# Push til main => byg og udgiv automatisk til www.anemetteolesen.dk
+# Pull requests => byg kun (tjekker at koden kompilerer), ingen udgivelse
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
-  SOLUTION_OR_PROJECT: Anemette.csproj
+  PROJECT: Anemette.csproj
   PUBLISH_DIR: publish
 
 jobs:
@@ -15,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -24,19 +32,50 @@ jobs:
         uses: NuGet/setup-nuget@v2
 
       - name: Restore NuGet packages
-        run: nuget restore ${{ env.SOLUTION_OR_PROJECT }}
+        run: nuget restore ${{ env.PROJECT }} -PackagesDirectory packages
 
       - name: Build and publish (FileSystem)
         run: >
-          msbuild ${{ env.SOLUTION_OR_PROJECT }}
+          msbuild ${{ env.PROJECT }}
           /p:Configuration=Release
           /p:Platform="AnyCPU"
           /p:DeployOnBuild=true
           /p:WebPublishMethod=FileSystem
-          /p:publishUrl=${{ env.PUBLISH_DIR }}
+          /p:publishUrl=${{ github.workspace }}\${{ env.PUBLISH_DIR }}
           /p:DeleteExistingFiles=true
+          /p:ExcludeFilesFromDeployment="ConnectionStrings.config.example;Secrets.config.example"
+
+      - name: Write secret config files
+        if: github.event_name != 'pull_request'
+        shell: pwsh
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          if (-not $env:DB_CONNECTION_STRING) {
+            throw "Secret DB_CONNECTION_STRING mangler - sitet kan ikke køre uden database. Se README.md."
+          }
+          function Esc([string]$s) { [System.Security.SecurityElement]::Escape($s) }
+          $ef = "metadata=res://*/Models.AnemetteModel.csdl|res://*/Models.AnemetteModel.ssdl|res://*/Models.AnemetteModel.msl;provider=System.Data.SqlClient;provider connection string=`"$($env:DB_CONNECTION_STRING);MultipleActiveResultSets=True;App=EntityFramework`""
+          $cs = @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <connectionStrings>
+            <add name="DatabaseEntities" connectionString="$(Esc $ef)" providerName="System.Data.EntityClient" />
+          </connectionStrings>
+          "@
+          Set-Content -Path "$env:PUBLISH_DIR/ConnectionStrings.config" -Value $cs.Trim() -Encoding utf8
+          $secrets = @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <appSettings>
+            <add key="SmtpBruger" value="$(Esc $env:SMTP_USER)" />
+            <add key="SmtpKodeord" value="$(Esc $env:SMTP_PASSWORD)" />
+          </appSettings>
+          "@
+          Set-Content -Path "$env:PUBLISH_DIR/Secrets.config" -Value $secrets.Trim() -Encoding utf8
 
       - name: Deploy over FTP
+        if: github.event_name != 'pull_request'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}

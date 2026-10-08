@@ -103,13 +103,13 @@
         </dl>
     </div>
     <p>
-        @Html.ActionLink("Ændr", "EditKursus", new { id = Model.ID }) |
-        @Html.ActionLink("Tilbage til listen", "Index") |
-        @using (Html.BeginForm("SletKursus", "Event", new { id = Model.ID }, FormMethod.Post))
+        @Html.ActionLink("Tilbage til listen", "Index")
+        @* Redigering og sletning vises kun for en indlogget administrator *@
+        @if (Session["LoginBruger"] != null)
         {
-
-            <button>Slet dette kursus</button>
-
+            @: |
+            @Html.ActionLink("Ændr", "EditKursus", new { id = Model.ID })
+            @: |
+            @Html.ActionLink("Slet dette kursus", "SletKursus", new { id = Model.ID })
         }
-        @Html.ActionLink("Slet dette kursus", "SletKursus", new { id = Model.ID })
     </p>

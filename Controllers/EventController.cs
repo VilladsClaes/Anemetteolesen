@@ -11,6 +11,7 @@ using System.Net;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using Anemette.Filters;
 using Anemette.Models;
 
 namespace Anemette.Controllers
@@ -44,6 +45,7 @@ namespace Anemette.Controllers
         }
 
         // GET: Event/Create
+        [AdminAdgang]
         public ActionResult OpretKursus()
         {
             ViewBag.FK_Region = new SelectList(db.tblEventRegions, "ID", "Region");
@@ -63,6 +65,7 @@ namespace Anemette.Controllers
         //[ValidateAntiForgeryToken] ensures that the token passed by the HTML form, thus validating the request. The purpose of this is to ensure that the request actually came from the form it is expected to come from in order to prevent cross-site request forgeries. In simple terms, a cross-site request forgery is a request from a form on another web site to your web site with malicious intentions.
         [ValidateAntiForgeryToken]
         //The parameters ([Bind(Include = “ID,Name”)] Category category) tell the method to include only the ID and the Name properties when adding a new category. The Bind attribute is used to protect against overposting attacks by creating a list of safe properties to update; however, as we will discuss later, it does not work as expected and so it is safer to use a different method for editing or creating where some values may be blank. As an example of overposting, consider a scenario where the price is submitted as part of the request when a user submits an order for a product. An overposting attack would attempt to alter this price data by changing the submitted request data in an attempt to buy the product cheaper.
+        [AdminAdgang]
         public ActionResult OpretKursus(IEnumerable<HttpPostedFileBase> SamlingAfBilleder, tblEvent NytEvent)
         {
             if (ModelState.IsValid)
@@ -142,6 +145,7 @@ namespace Anemette.Controllers
         }
 
         // GET: Event/Edit/5
+        [AdminAdgang]
         public ActionResult EditKursus( int? id)
         {
             if (id == null)
@@ -168,6 +172,7 @@ namespace Anemette.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminAdgang]
         public ActionResult EditKursus([Bind(Include = "ID,EventOverskrift,EventDato,EventBeskrivelse,EventPris,EventPladser,EventDistance,FK_Region,FK_Sponsor,FK_Type")] tblEvent tblEvent, IEnumerable<HttpPostedFileBase> EkstraSamlingAfBilleder)
         {
             if (ModelState.IsValid)
@@ -235,6 +240,7 @@ namespace Anemette.Controllers
         }
 
         // GET: Event/Delete/5
+        [AdminAdgang]
         public ActionResult SletKursus(int? id)
         {
             if (id == null)
@@ -251,6 +257,7 @@ namespace Anemette.Controllers
 
         // POST: Event/Delete/5
         [HttpPost, ActionName("SletKursus")]        
+        [AdminAdgang]
         public ActionResult DeleteConfirmed(int id)
         {
             tblEvent tblEvent = db.tblEvents.Find(id);
