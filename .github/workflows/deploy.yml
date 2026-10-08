@@ -43,7 +43,6 @@ jobs:
           /p:WebPublishMethod=FileSystem
           /p:publishUrl=${{ github.workspace }}\${{ env.PUBLISH_DIR }}
           /p:DeleteExistingFiles=true
-          /p:ExcludeFilesFromDeployment="ConnectionStrings.config.example;Secrets.config.example"
 
       - name: Write secret config files
         if: github.event_name != 'pull_request'
