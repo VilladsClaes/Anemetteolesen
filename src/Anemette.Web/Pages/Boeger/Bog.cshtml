@@ -1,0 +1,62 @@
+@page "/boeger/{slug}"
+@model Anemette.Web.Pages.Boeger.BogModel
+@{
+    var bog = Model.Bog;
+    ViewData["Title"] = bog.Titel;
+    ViewData["Beskrivelse"] = bog.Beskrivelse ?? $"{bog.Titel} af Anemette Olesen, Skarresøhus Forlag.";
+}
+
+<p><a href="/boeger">← Tilbage til alle bøgerne</a></p>
+
+<article class="bog-detalje">
+    <div><partial name="_Omslag" model="bog" /></div>
+    <div>
+        <h1>@bog.Titel</h1>
+        @if (!string.IsNullOrEmpty(bog.Undertitel))
+        {
+            <p class="indledning">@bog.Undertitel</p>
+        }
+        <div class="tekst markdown">@Html.Raw(Tekst.TilHtml(bog.Beskrivelse))</div>
+
+        <dl class="fakta">
+            @if (bog.Status != BogStatus.KommerSnart)
+            {
+                <dt>Pris</dt><dd><strong>@Tekst.Kr(bog.Pris)</strong> + porto</dd>
+            }
+            @if (bog.Udgivelsesaar != null) { <dt>Udgivet</dt><dd>@bog.Udgivelsesaar</dd> }
+            @if (bog.Sider != null) { <dt>Sider</dt><dd>@bog.Sider</dd> }
+            @if (!string.IsNullOrEmpty(bog.Isbn)) { <dt>ISBN</dt><dd>@bog.Isbn</dd> }
+            @if (!string.IsNullOrEmpty(bog.Emne)) { <dt>Emne</dt><dd><a href="/boeger?emne=@Uri.EscapeDataString(bog.Emne)">@bog.Emne</a></dd> }
+        </dl>
+
+        @if (bog.Status == BogStatus.KommerSnart)
+        {
+            <p class="besked besked-ok">Bogen er på vej. <a href="/kontakt">Skriv til mig</a>, hvis du vil have besked, når den udkommer.</p>
+        }
+        else if (bog.KanBestilles)
+        {
+            <form method="post" asp-page="/Indkoeb/Index" asp-page-handler="Tilfoej" class="knaprad">
+                <input type="hidden" name="bogId" value="@bog.Id">
+                <label for="antal" class="afkryds">Antal</label>
+                <input type="number" id="antal" name="antal" value="1" min="1" max="@Math.Min(bog.Lager, Kurv.MaksAntal)">
+                <button type="submit" class="knap">Læg i kurven</button>
+            </form>
+        }
+        else
+        {
+            <p class="besked besked-fejl">Bogen er desværre udsolgt. <a href="/kontakt">Skriv til mig</a>, så hører du, hvis der kommer flere.</p>
+        }
+    </div>
+</article>
+
+@if (Model.SammeEmne.Count > 0)
+{
+    <partial name="_Skillelinje" />
+    <h2 class="centreret">Flere bøger i emnet «@bog.Emne»</h2>
+    <ul class="bogliste">
+        @foreach (var b in Model.SammeEmne)
+        {
+            <partial name="_Bogkort" model="b" />
+        }
+    </ul>
+}

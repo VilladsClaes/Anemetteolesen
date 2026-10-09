@@ -1,0 +1,74 @@
+@page "/kontakt"
+@model KontaktModel
+@{
+    ViewData["Title"] = "Kontakt";
+    ViewData["Beskrivelse"] = "Kontakt Anemette Olesen, Skarresøhus Forlag – om bøger, foredrag, naturvandringer og kurser.";
+    var k = Model.Kontakt;
+}
+
+<h1>Kontakt</h1>
+
+<div class="to-spalter">
+    <section aria-labelledby="skriv">
+        <h2 id="skriv">Skriv til mig</h2>
+        <p>Vil du bestille et foredrag, en naturvandring eller et kursus – eller har du et spørgsmål til en af bøgerne? Så skriv her, eller ring til mig.</p>
+
+        @if (Model.Besked != null)
+        {
+            <p class="besked besked-ok" role="status">@Model.Besked</p>
+        }
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <p class="besked besked-fejl" role="alert">Der mangler noget i formularen. Se de røde beskeder herunder.</p>
+        }
+
+        <form method="post" novalidate>
+            <div class="felt">
+                <label asp-for="Input.Navn"></label>
+                <input asp-for="Input.Navn" autocomplete="name">
+                <span asp-validation-for="Input.Navn" class="felt-fejl"></span>
+            </div>
+            <div class="felt">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" type="email" autocomplete="email">
+                <span asp-validation-for="Input.Email" class="felt-fejl"></span>
+            </div>
+            <div class="felt">
+                <label asp-for="Input.Telefon"></label>
+                <input asp-for="Input.Telefon" type="tel" autocomplete="tel">
+            </div>
+            <div class="felt">
+                <label asp-for="Input.Emne"></label>
+                <input asp-for="Input.Emne">
+                <span asp-validation-for="Input.Emne" class="felt-fejl"></span>
+            </div>
+            <div class="felt">
+                <label asp-for="Input.Besked"></label>
+                <textarea asp-for="Input.Besked" rows="7"></textarea>
+                <span asp-validation-for="Input.Besked" class="felt-fejl"></span>
+            </div>
+            <div class="skjult-tekst" aria-hidden="true">
+                <label for="hjemmeside">Lad dette felt være tomt</label>
+                <input type="text" id="hjemmeside" name="Hjemmeside" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="felt">
+                <label class="afkryds">
+                    <input asp-for="Input.Samtykke">
+                    <span>Jeg har læst, at mine oplysninger kun bruges til at besvare min henvendelse. <a href="/privatliv" target="_blank">Læs mere</a></span>
+                </label>
+                <span asp-validation-for="Input.Samtykke" class="felt-fejl"></span>
+            </div>
+            <button type="submit" class="knap">Send beskeden</button>
+        </form>
+    </section>
+
+    <aside class="ramme kontaktkort" aria-labelledby="oplysninger">
+        <h2 id="oplysninger">Kontaktoplysninger</h2>
+        <address>
+            <p><strong>@k.Navn</strong><br>@k.Forlag</p>
+            <p>@k.Adresse<br>@k.PostnrBy</p>
+            <p>Telefon: <a href="tel:@k.TelefonLink">@k.Telefon</a></p>
+            <p>E-mail: <a href="mailto:@k.Email">@k.Email</a></p>
+        </address>
+    </aside>
+</div>

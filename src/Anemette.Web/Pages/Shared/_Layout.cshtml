@@ -1,0 +1,64 @@
+@inject Indstillinger Indstillinger
+@inject Kurv Kurv
+@{
+    var k = await Indstillinger.KontaktAsync();
+    var antalIKurv = Kurv.AntalVarer();
+    var sti = Context.Request.Path.Value ?? "/";
+    string? Aktiv(string link) =>
+        (link == "/" ? sti == "/" : sti.StartsWith(link, StringComparison.OrdinalIgnoreCase)) ? "page" : null;
+    var titel = ViewData["Title"] as string;
+}
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@(string.IsNullOrEmpty(titel) ? "" : titel + " – ")Anemette Olesen – Skarresøhus Forlag</title>
+    <meta name="description" content="@(ViewData["Beskrivelse"] as string ?? "Anemette Olesen – forfatter, urtekyndig, foredragsholder og fotograf. Bøger om urter, lægeplanter, vilde planter og grøn mad fra Skarresøhus Forlag.")">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+</head>
+<body>
+    <a class="spring-over" href="#hovedindhold">Spring til indholdet</a>
+
+    <header class="sidehoved">
+        <a class="titel" href="/" aria-label="Anemette Olesen – Skarresøhus Forlag, til forsiden">
+            <img src="/img/kvist.svg" alt="" class="spejlet" width="110" height="33">
+            <span>
+                <span class="navn">Anemette Olesen</span>
+                <span class="forlag">Skarresøhus Forlag</span>
+            </span>
+            <img src="/img/kvist.svg" alt="" width="110" height="33">
+        </a>
+        <nav class="hovedmenu" aria-label="Hovedmenu">
+            <ul>
+                <li><a href="/" aria-current="@Aktiv("/")">Forside</a></li>
+                <li><a href="/boeger" aria-current="@Aktiv("/boeger")">Bøger</a></li>
+                <li><a href="/foredrag" aria-current="@Aktiv("/foredrag")">Foredrag</a></li>
+                <li><a href="/naturvandringer" aria-current="@Aktiv("/naturvandringer")">Naturvandringer og kurser</a></li>
+                <li><a href="/nyt" aria-current="@Aktiv("/nyt")">Nyt</a></li>
+                <li><a href="/om" aria-current="@Aktiv("/om")">Om Anemette</a></li>
+                <li><a href="/kontakt" aria-current="@Aktiv("/kontakt")">Kontakt</a></li>
+                @if (antalIKurv > 0)
+                {
+                    <li><a class="kurv-link" href="/kurv" aria-current="@Aktiv("/kurv")">Kurv (@antalIKurv)</a></li>
+                }
+            </ul>
+        </nav>
+    </header>
+
+    <main id="hovedindhold" class="indhold">
+        @RenderBody()
+    </main>
+
+    <footer class="sidefod">
+        <img src="/img/kvist.svg" alt="" width="120" height="36">
+        <address>
+            <span class="forlagsnavn">@k.Forlag v/ @k.Navn</span><br>
+            @k.Adresse, @k.PostnrBy<br>
+            Telefon <a href="tel:@k.TelefonLink">@k.Telefon</a> · <a href="mailto:@k.Email">@k.Email</a>
+        </address>
+        <p><a href="/kontakt">Skriv til mig</a> · <a href="/privatliv">Privatliv og cookies</a></p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,31 @@
+@page "/admin/artikler"
+@inject AppDbContext Db
+@{
+    ViewData["Title"] = "Nyt";
+    var artikler = Db.Artikler.OrderByDescending(a => a.Udgivet).ToList();
+}
+
+<h1>Nyt – artikler og nyheder</h1>
+<p>Her skriver du om ny viden, kommende udgivelser og andet, du vil fortælle om. Artiklerne vises under «Nyt» og på forsiden.</p>
+<p class="knaprad"><a class="knap" href="/admin/artikler/rediger">Skriv en ny artikel</a></p>
+
+@if (artikler.Count == 0)
+{
+    <p>Der er ingen artikler endnu.</p>
+}
+else
+{
+    <table>
+        <thead><tr><th>Dato</th><th>Overskrift</th><th>Vises</th></tr></thead>
+        <tbody>
+            @foreach (var a in artikler)
+            {
+                <tr>
+                    <td>@Tekst.DatoKort(a.Udgivet)</td>
+                    <td><a href="/admin/artikler/rediger/@a.Id">@a.Titel</a></td>
+                    <td>@(a.Synlig ? "Ja" : "Nej")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

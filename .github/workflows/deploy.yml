@@ -1,7 +1,7 @@
-name: Build and deploy to webhotel
+name: Byg, test og udgiv
 
-# Push til main => byg og udgiv automatisk til www.anemetteolesen.dk
-# Pull requests => byg kun (tjekker at koden kompilerer), ingen udgivelse
+# Push til main => byg, test og udgiv automatisk til www.anemetteolesen.dk
+# Pull requests => byg og test kun
 on:
   push:
     branches: [ main ]
@@ -14,79 +14,65 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  PROJECT: Anemette.csproj
   PUBLISH_DIR: publish
 
 jobs:
-  build-and-deploy:
-    runs-on: windows-latest
+  byg-og-udgiv:
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Hent koden
         uses: actions/checkout@v5
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+      - name: Installér .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
 
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v2
+      - name: Test
+        run: dotnet test Anemette.slnx -c Release
 
-      - name: Restore NuGet packages
-        run: nuget restore ${{ env.PROJECT }} -PackagesDirectory packages
+      - name: Byg til Windows-serveren (self-contained)
+        run: |
+          dotnet publish src/Anemette.Web/Anemette.Web.csproj -c Release -r win-x64 --self-contained true -o "$PUBLISH_DIR"
+          # Den gamle side havde "Web.config" med stort W. Samme navn, så FTP-synkroniseringen overskriver i stedet for at slette.
+          mv "$PUBLISH_DIR/web.config" "$PUBLISH_DIR/Web.config"
 
-      - name: Build and publish (FileSystem)
-        run: >
-          msbuild ${{ env.PROJECT }}
-          /p:Configuration=Release
-          /p:Platform="AnyCPU"
-          /p:DeployOnBuild=true
-          /p:PublishProfile=FolderProfile
-          /p:publishUrl=${{ github.workspace }}\${{ env.PUBLISH_DIR }}
-          /p:DeleteExistingFiles=true
-
-      - name: Write secret config files
+      - name: Skriv hemmelige indstillinger
         if: github.event_name != 'pull_request'
-        shell: pwsh
         env:
           DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          KRYPTERING_NOEGLE: ${{ secrets.KRYPTERING_NOEGLE }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
         run: |
-          if (-not $env:DB_CONNECTION_STRING) {
-            throw "Secret DB_CONNECTION_STRING mangler - sitet kan ikke køre uden database. Se README.md."
+          python3 - <<'PY'
+          import json, os, sys
+          mangler = [n for n in ("DB_CONNECTION_STRING", "KRYPTERING_NOEGLE") if not os.environ.get(n)]
+          if mangler:
+              sys.exit("Secret mangler: " + ", ".join(mangler) + ". Se README.md.")
+          indstillinger = {
+              "ConnectionStrings": {"Database": os.environ["DB_CONNECTION_STRING"]},
+              "Kryptering": {"Noegle": os.environ["KRYPTERING_NOEGLE"]},
+              "Smtp": {"Bruger": os.environ.get("SMTP_USER", ""), "Kodeord": os.environ.get("SMTP_PASSWORD", "")},
           }
-          function Esc([string]$s) { [System.Security.SecurityElement]::Escape($s) }
-          $cs = @"
-          <?xml version="1.0" encoding="utf-8"?>
-          <connectionStrings>
-            <add name="DatabaseEntities" connectionString="$(Esc $env:DB_CONNECTION_STRING)" providerName="MySql.Data.MySqlClient" />
-          </connectionStrings>
-          "@
-          Set-Content -Path "$env:PUBLISH_DIR/ConnectionStrings.config" -Value $cs.Trim() -Encoding utf8
-          $secrets = @"
-          <?xml version="1.0" encoding="utf-8"?>
-          <appSettings>
-            <add key="SmtpBruger" value="$(Esc $env:SMTP_USER)" />
-            <add key="SmtpKodeord" value="$(Esc $env:SMTP_PASSWORD)" />
-          </appSettings>
-          "@
-          Set-Content -Path "$env:PUBLISH_DIR/Secrets.config" -Value $secrets.Trim() -Encoding utf8
+          with open(os.path.join(os.environ["PUBLISH_DIR"], "appsettings.Production.json"), "w", encoding="utf-8") as f:
+              json.dump(indstillinger, f, ensure_ascii=False, indent=2)
+          PY
 
-      # IIS låser DLL'erne i bin/ mens sitet kører. app_offline.htm får IIS til at stoppe appen under upload.
-      - name: Take site offline
+      # IIS låser filerne, mens sitet kører. app_offline.htm stopper appen under upload.
+      - name: Sæt siden på pause
         if: github.event_name != 'pull_request'
-        shell: pwsh
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          Set-Content app_offline.htm '<!doctype html><meta charset="utf-8"><title>Opdateres</title><p>Siden opdateres - prøv igen om et øjeblik.</p>' -Encoding utf8
-          curl.exe --fail --silent --show-error --ssl-reqd --user "${env:FTP_USERNAME}:${env:FTP_PASSWORD}" -T app_offline.htm "ftp://$($env:FTP_SERVER)/anemetteolesen.dk/app_offline.htm"
-          if ($LASTEXITCODE -ne 0) { throw "Kunne ikke uploade app_offline.htm" }
-          Start-Sleep -Seconds 15
+          printf '<!doctype html><meta charset="utf-8"><title>Opdateres</title><p style="font:20px Georgia,serif;margin:3em">Siden opdateres – prøv igen om et øjeblik.</p>' > app_offline.htm
+          curl --fail --silent --show-error --ssl-reqd --user "$FTP_USERNAME:$FTP_PASSWORD" -T app_offline.htm "ftp://$FTP_SERVER/anemetteolesen.dk/app_offline.htm"
+          sleep 15
 
-      - name: Deploy over FTP
+      - name: Upload via FTP
         if: github.event_name != 'pull_request'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -100,15 +86,14 @@ jobs:
           exclude: |
             **/.git*
             **/.git*/**
-            **/.github/**
             **/Uploads/**
+            **/logs/**
 
-      - name: Bring site online
+      - name: Start siden igen
         if: always() && github.event_name != 'pull_request'
-        shell: pwsh
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          curl.exe --fail --silent --show-error --ssl-reqd --user "${env:FTP_USERNAME}:${env:FTP_PASSWORD}" -Q "DELE /anemetteolesen.dk/app_offline.htm" "ftp://$($env:FTP_SERVER)/"
+          curl --fail --silent --show-error --ssl-reqd --user "$FTP_USERNAME:$FTP_PASSWORD" -Q "DELE /anemetteolesen.dk/app_offline.htm" "ftp://$FTP_SERVER/" || echo "app_offline.htm var allerede fjernet"

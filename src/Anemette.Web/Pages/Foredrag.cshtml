@@ -1,0 +1,21 @@
+@page "/foredrag"
+@model ForedragModel
+@{
+    ViewData["Title"] = "Foredrag";
+    ViewData["Beskrivelse"] = "Foredrag med Anemette Olesen om lægeplanter, krydderurter, gamle køkkenurter, spiselige blomster og meget mere.";
+}
+
+<div class="to-spalter">
+    <article class="markdown">
+        <h1>@Model.Side.Titel</h1>
+        @Html.Raw(Tekst.TilHtml(Model.Side.Indhold))
+    </article>
+    <aside>
+        <figure class="ramme">
+            <img src="/Uploads/foredrag.jpg" alt="Anemette Olesen fortæller om planterne for en gruppe i en have" width="294" height="146">
+        </figure>
+        <h2>Kommende foredrag</h2>
+        <partial name="_Arrangementliste" model="Model.Arrangementer" />
+        <p><a class="knap" href="/kontakt">Book et foredrag</a></p>
+    </aside>
+</div>

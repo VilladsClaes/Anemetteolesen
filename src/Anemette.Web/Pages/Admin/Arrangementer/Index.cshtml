@@ -1,0 +1,35 @@
+@page "/admin/arrangementer"
+@model Anemette.Web.Pages.Admin.Arrangementer.IndexModel
+@{
+    ViewData["Title"] = "Arrangementer";
+}
+
+<h1>Foredrag, naturvandringer og kurser</h1>
+<p class="knaprad"><a class="knap" href="/admin/arrangementer/rediger">Opret et nyt arrangement</a></p>
+
+@foreach (var (overskrift, liste) in new[] { ("Kommende", Model.Kommende), ("Afholdte", Model.Afholdte) })
+{
+    <h2>@overskrift</h2>
+    @if (liste.Count == 0)
+    {
+        <p>Ingen.</p>
+        continue;
+    }
+    <div class="tabel-rul">
+        <table>
+            <thead><tr><th>Dato</th><th>Titel</th><th>Type</th><th class="tal">Tilmeldte</th><th>Vises</th></tr></thead>
+            <tbody>
+                @foreach (var (a, tilmeldte) in liste)
+                {
+                    <tr>
+                        <td>@a.Start.ToString("d. MMM yyyy 'kl.' HH.mm", Tekst.Dansk)</td>
+                        <td><a href="/admin/arrangementer/rediger/@a.Id">@a.Titel</a></td>
+                        <td>@a.Type.Visningsnavn()</td>
+                        <td class="tal">@(a.Pladser is > 0 ? $"{tilmeldte} / {a.Pladser}" : "–")</td>
+                        <td>@(a.Synlig ? "Ja" : "Nej")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

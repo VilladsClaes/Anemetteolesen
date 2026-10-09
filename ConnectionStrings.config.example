@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Kopiér til ConnectionStrings.config og udfyld MySQL-server, database, bruger og adgangskode.
-     ConnectionStrings.config må ALDRIG committes (den står i .gitignore). -->
-<connectionStrings>
-  <add name="DatabaseEntities" connectionString="server=mysqlXX.unoeuro.com;database=DATABASE;user id=BRUGER;password=KODEORD;CharSet=utf8mb4;SslMode=Preferred" providerName="MySql.Data.MySqlClient" />
-</connectionStrings>

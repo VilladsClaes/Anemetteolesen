@@ -1,0 +1,43 @@
+@page "/admin/ordrer"
+@model Anemette.Web.Pages.Admin.Ordrer.IndexModel
+@{
+    ViewData["Title"] = "Ordrer";
+}
+
+<h1>Ordrer</h1>
+
+<nav aria-label="Vis ordrer">
+    <ul class="emner">
+        <li><a href="/admin/ordrer" aria-current="@(Model.Status == null ? "true" : null)">Alle</a></li>
+        @foreach (var s in Enum.GetValues<OrdreStatus>())
+        {
+            <li><a href="/admin/ordrer?status=@s" aria-current="@(Model.Status == s ? "true" : null)">@s.Visningsnavn()</a></li>
+        }
+    </ul>
+</nav>
+
+@if (Model.Ordrer.Count == 0)
+{
+    <p>Der er ingen ordrer her.</p>
+}
+else
+{
+    <div class="tabel-rul">
+        <table>
+            <thead><tr><th>Nr.</th><th>Dato</th><th>Kunde</th><th>Bøger</th><th class="tal">Beløb</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var o in Model.Ordrer)
+                {
+                    <tr>
+                        <td><a href="/admin/ordrer/@o.Id">@o.Id</a></td>
+                        <td>@Tekst.DanskTid(o.Oprettet).ToString("d. MMM yyyy", Tekst.Dansk)</td>
+                        <td>@(o.Anonymiseret ? "(slettet efter 5 år)" : $"{o.Navn}, {o.By}")</td>
+                        <td>@o.Linjer.Sum(l => l.Antal)</td>
+                        <td class="tal">@Tekst.Kr(o.Total)</td>
+                        <td>@o.Status.Visningsnavn()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

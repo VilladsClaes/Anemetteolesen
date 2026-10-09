@@ -1,0 +1,36 @@
+@page "/admin/boeger"
+@model Anemette.Web.Pages.Admin.Boeger.IndexModel
+@{
+    ViewData["Title"] = "Bøger og lager";
+}
+
+<h1>Bøger og lager</h1>
+<p class="knaprad"><a class="knap" href="/admin/boeger/rediger">Tilføj en ny bog</a></p>
+<p>Ret lagertallene direkte i listen og tryk «Gem lagertal». Klik på en titel for at rette pris, tekst, billede og status.</p>
+
+<form method="post" asp-page-handler="Lager">
+    <div class="tabel-rul">
+        <table>
+            <thead>
+                <tr><th></th><th>Titel</th><th>Status</th><th class="tal">Pris</th><th class="tal">Solgt</th><th>På lager</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var b in Model.Boeger)
+                {
+                    <tr>
+                        <td>@if (!string.IsNullOrEmpty(b.Forside)) { <img class="lille-omslag" src="@UploadMappe.Url(b.Forside)" alt="" loading="lazy"> }</td>
+                        <td><a href="/admin/boeger/rediger/@b.Id">@b.Titel</a>@if (b.Fremhaevet) { <br><span class="hjaelp">Vises på forsiden</span> }</td>
+                        <td>@b.Status.Visningsnavn()</td>
+                        <td class="tal">@Tekst.Kr(b.Pris)</td>
+                        <td class="tal">@Model.Solgt.GetValueOrDefault(b.Id)</td>
+                        <td>
+                            <label for="lager-@b.Id" class="skjult-tekst">Lager for @b.Titel</label>
+                            <input type="number" id="lager-@b.Id" name="lager[@b.Id]" value="@b.Lager" min="0">
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <button type="submit" class="knap">Gem lagertal</button>
+</form>

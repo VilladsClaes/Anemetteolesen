@@ -1,0 +1,22 @@
+@page "/fejl"
+@model FejlModel
+@{
+    ViewData["Title"] = Model.Kode == 404 ? "Siden findes ikke" : "Der skete en fejl";
+}
+
+<section class="tekst">
+    @if (Model.Kode == 404)
+    {
+        <h1>Siden findes ikke</h1>
+        <p>Den side, du leder efter, findes ikke – måske er den flyttet. Prøv forsiden eller listen over bøger.</p>
+    }
+    else
+    {
+        <h1>Der skete en fejl</h1>
+        <p>Beklager – noget gik galt. Prøv igen om lidt, eller ring til mig, hvis det bliver ved.</p>
+    }
+    <div class="knaprad">
+        <a class="knap" href="/">Til forsiden</a>
+        <a class="knap knap-sekundaer" href="/boeger">Se bøgerne</a>
+    </div>
+</section>

@@ -1,0 +1,61 @@
+@page "/kurv"
+@model Anemette.Web.Pages.Indkoeb.IndexModel
+@{
+    ViewData["Title"] = "Kurv";
+}
+
+<h1>Din kurv</h1>
+
+@if (Model.Besked != null)
+{
+    <p class="besked besked-ok" role="status">@Model.Besked</p>
+}
+
+@if (Model.Linjer.Count == 0)
+{
+    <p>Kurven er tom.</p>
+    <p><a class="knap" href="/boeger">Se bøgerne</a></p>
+}
+else
+{
+    <form method="post" asp-page-handler="Opdater">
+        <div class="tabel-rul">
+            <table>
+                <thead>
+                    <tr><th scope="col">Bog</th><th scope="col">Antal</th><th scope="col" class="tal">Pris</th><th scope="col"><span class="skjult-tekst">Fjern</span></th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var l in Model.Linjer)
+                    {
+                        <tr>
+                            <td><a href="/boeger/@l.Bog.Slug">@l.Bog.Titel</a><br><span class="hjaelp">@Tekst.Kr(l.Bog.Pris) pr. stk.</span></td>
+                            <td>
+                                <label for="antal-@l.Bog.Id" class="skjult-tekst">Antal af @l.Bog.Titel</label>
+                                <input type="number" id="antal-@l.Bog.Id" name="antal[@l.Bog.Id]" value="@l.Antal" min="0" max="@Kurv.MaksAntal">
+                            </td>
+                            <td class="tal">@Tekst.Kr(l.Beloeb)</td>
+                            <td><button type="submit" class="knap knap-sekundaer knap-lille" form="fjern-@l.Bog.Id">Fjern</button></td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr><td colspan="2">I alt (porto lægges til)</td><td class="tal">@Tekst.Kr(Model.Total)</td><td></td></tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="knaprad">
+            <button type="submit" class="knap knap-sekundaer">Opdatér antal</button>
+        </div>
+    </form>
+    @foreach (var l in Model.Linjer)
+    {
+        <form method="post" asp-page-handler="Fjern" id="fjern-@l.Bog.Id">
+            <input type="hidden" name="bogId" value="@l.Bog.Id">
+        </form>
+    }
+
+    <div class="knaprad">
+        <a class="knap" href="/kurv/bestil">Gå videre til bestilling</a>
+        <a href="/boeger">Fortsæt med at kigge på bøger</a>
+    </div>
+}

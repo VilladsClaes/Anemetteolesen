@@ -1,0 +1,10 @@
+@page "/privatliv"
+@model PrivatlivModel
+@{
+    ViewData["Title"] = "Privatliv og cookies";
+}
+
+<article class="markdown tekst">
+    <h1>@Model.Side.Titel</h1>
+    @Html.Raw(Tekst.TilHtml(Model.Side.Indhold))
+</article>

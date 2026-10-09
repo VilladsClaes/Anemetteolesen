@@ -1,0 +1,9 @@
+@model Bog
+@if (!string.IsNullOrEmpty(Model.Forside))
+{
+    <img class="omslag-billede" src="@UploadMappe.Url(Model.Forside)" alt="Forsiden af bogen @Model.Titel" loading="lazy">
+}
+else
+{
+    <span class="omslag-tom" aria-hidden="true">@Model.Titel</span>
+}

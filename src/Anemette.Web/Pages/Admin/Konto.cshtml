@@ -1,0 +1,74 @@
+@page "/admin/konto"
+@model KontoModel
+@{
+    ViewData["Title"] = "Konto";
+}
+
+<h1>Konto og administratorer</h1>
+
+@if (Model.Fejl != null)
+{
+    <p class="besked besked-fejl" role="alert">@Model.Fejl</p>
+}
+
+<div class="to-spalter">
+    <section>
+        <h2>Skift din adgangskode</h2>
+        <form method="post" asp-page-handler="SkiftAdgangskode">
+            <div class="felt">
+                <label for="nuvaerende">Nuværende adgangskode</label>
+                <input type="password" id="nuvaerende" name="nuvaerende" autocomplete="current-password">
+            </div>
+            <div class="felt">
+                <label for="ny">Ny adgangskode<span class="hjaelp">Mindst @AdminLogin.MindsteLaengde tegn. En sætning er let at huske og svær at gætte.</span></label>
+                <input type="password" id="ny" name="ny" autocomplete="new-password">
+            </div>
+            <div class="felt">
+                <label for="gentag">Gentag den nye adgangskode</label>
+                <input type="password" id="gentag" name="gentag" autocomplete="new-password">
+            </div>
+            <button type="submit" class="knap">Skift adgangskode</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Administratorer</h2>
+        <table>
+            <thead><tr><th>Brugernavn</th><th>Sidst logget ind</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var a in Model.Administratorer)
+                {
+                    <tr>
+                        <td>@a.Brugernavn@(a.Id == Model.MitId ? " (dig)" : "")</td>
+                        <td>@(a.SidstLoggetInd is null ? "–" : Tekst.DatoKort(Tekst.DanskTid(a.SidstLoggetInd.Value)))</td>
+                        <td>
+                            @if (a.Id != Model.MitId)
+                            {
+                                <form method="post" asp-page-handler="Slet" asp-route-id="@a.Id" data-bekraeft="Vil du slette administratoren @a.Brugernavn?">
+                                    <button type="submit" class="knap knap-sekundaer knap-lille">Slet</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3>Tilføj en administrator</h3>
+        <form method="post" asp-page-handler="Opret">
+            <div class="felt">
+                <label for="brugernavn">Brugernavn</label>
+                <input type="text" id="brugernavn" name="brugernavn" autocomplete="off">
+            </div>
+            <div class="felt">
+                <label for="email">E-mail (valgfri)</label>
+                <input type="email" id="email" name="email" autocomplete="off">
+            </div>
+            <div class="felt">
+                <label for="adgangskode">Adgangskode<span class="hjaelp">Mindst @AdminLogin.MindsteLaengde tegn.</span></label>
+                <input type="password" id="adgangskode" name="adgangskode" autocomplete="new-password">
+            </div>
+            <button type="submit" class="knap">Tilføj</button>
+        </form>
+    </section>
+</div>

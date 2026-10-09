@@ -1,0 +1,25 @@
+@page "/naturvandringer"
+@model NaturvandringerModel
+@{
+    ViewData["Title"] = "Naturvandringer og kurser";
+    ViewData["Beskrivelse"] = "Naturvandringer og kurser i vild mad, spiseblomster og krydderurter med Anemette Olesen.";
+}
+
+<h1>@Model.Side.Titel</h1>
+<figure class="ramme">
+    <img src="/Uploads/om-anemette.jpg" alt="En gruppe deltagere på naturvandring med Anemette Olesen" width="2048" height="1152">
+</figure>
+
+<div class="to-spalter">
+    <div class="markdown">
+        @Html.Raw(Tekst.TilHtml(Model.Side.Indhold))
+        <p><a class="knap" href="/kontakt">Bestil en naturvandring eller et kursus</a></p>
+    </div>
+    <aside>
+        <h2>Kommende naturvandringer og kurser</h2>
+        <partial name="_Arrangementliste" model="Model.Arrangementer" />
+        <figure class="ramme">
+            <img src="/Uploads/vild%20mad%20kursus.jpg" alt="Rugbrød med vilde urter og blomster fra et kursus i vild mad" width="902" height="602" loading="lazy">
+        </figure>
+    </aside>
+</div>

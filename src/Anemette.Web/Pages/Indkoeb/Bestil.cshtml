@@ -1,0 +1,87 @@
+@page "/kurv/bestil"
+@model Anemette.Web.Pages.Indkoeb.BestilModel
+@{
+    ViewData["Title"] = "Bestilling";
+}
+
+<h1>Bestilling</h1>
+
+<div class="to-spalter">
+    <section aria-labelledby="dine-oplysninger">
+        <h2 id="dine-oplysninger">Dine oplysninger</h2>
+
+        @if (Model.Fejl.Count > 0)
+        {
+            <div class="besked besked-fejl" role="alert">
+                <ul>@foreach (var f in Model.Fejl) { <li>@f</li> }</ul>
+                <p><a href="/kurv">Ret kurven</a></p>
+            </div>
+        }
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <p class="besked besked-fejl" role="alert">Der mangler noget i formularen. Se de røde beskeder herunder.</p>
+        }
+
+        <form method="post" novalidate>
+            <div class="felt">
+                <label asp-for="Input.Navn"></label>
+                <input asp-for="Input.Navn" autocomplete="name">
+                <span asp-validation-for="Input.Navn" class="felt-fejl"></span>
+            </div>
+            <div class="felt">
+                <label asp-for="Input.Adresse"></label>
+                <input asp-for="Input.Adresse" autocomplete="street-address">
+                <span asp-validation-for="Input.Adresse" class="felt-fejl"></span>
+            </div>
+            <div class="to-felter">
+                <div class="felt">
+                    <label asp-for="Input.Postnummer"></label>
+                    <input asp-for="Input.Postnummer" autocomplete="postal-code" inputmode="numeric">
+                    <span asp-validation-for="Input.Postnummer" class="felt-fejl"></span>
+                </div>
+                <div class="felt">
+                    <label asp-for="Input.By"></label>
+                    <input asp-for="Input.By" autocomplete="address-level2">
+                    <span asp-validation-for="Input.By" class="felt-fejl"></span>
+                </div>
+            </div>
+            <div class="felt">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" type="email" autocomplete="email">
+                <span asp-validation-for="Input.Email" class="felt-fejl"></span>
+            </div>
+            <div class="felt">
+                <label asp-for="Input.Telefon"></label>
+                <input asp-for="Input.Telefon" type="tel" autocomplete="tel">
+                <span asp-validation-for="Input.Telefon" class="felt-fejl"></span>
+            </div>
+            <div class="felt">
+                <label asp-for="Input.Besked"></label>
+                <textarea asp-for="Input.Besked" rows="4"></textarea>
+            </div>
+            <div class="felt">
+                <label class="afkryds">
+                    <input asp-for="Input.Samtykke">
+                    <span>Jeg har læst, at mine oplysninger kun bruges til at sende bøgerne og fakturaen. <a href="/privatliv" target="_blank">Læs mere om privatliv</a></span>
+                </label>
+                <span asp-validation-for="Input.Samtykke" class="felt-fejl"></span>
+            </div>
+            <button type="submit" class="knap">Send bestillingen</button>
+        </form>
+    </section>
+
+    <aside aria-labelledby="du-bestiller" class="ramme">
+        <h2 id="du-bestiller">Du bestiller</h2>
+        <table>
+            <tbody>
+                @foreach (var l in Model.Linjer)
+                {
+                    <tr><td>@l.Antal × @l.Bog.Titel</td><td class="tal">@Tekst.Kr(l.Beloeb)</td></tr>
+                }
+            </tbody>
+            <tfoot><tr><td>I alt</td><td class="tal">@Tekst.Kr(Model.Total)</td></tr></tfoot>
+        </table>
+        <p>Porto lægges til. Bøgerne sendes med posten sammen med en faktura – du skal ikke betale noget nu.</p>
+        <p><a href="/kurv">Ret kurven</a></p>
+    </aside>
+</div>

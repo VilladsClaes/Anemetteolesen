@@ -1,0 +1,22 @@
+@page "/nyt/{slug}"
+@model Anemette.Web.Pages.Nyt.ArtikelModel
+@{
+    var a = Model.Artikel;
+    ViewData["Title"] = a.Titel;
+    ViewData["Beskrivelse"] = a.Indledning;
+}
+
+<p><a href="/nyt">← Alle nyheder</a></p>
+<article class="tekst markdown">
+    <h1>@a.Titel</h1>
+    <p class="dato-linje">@Tekst.DatoKort(a.Udgivet)</p>
+    @if (!string.IsNullOrEmpty(a.Indledning))
+    {
+        <p class="indledning">@a.Indledning</p>
+    }
+    @if (!string.IsNullOrEmpty(a.Billede))
+    {
+        <img class="artikel-billede" src="@UploadMappe.Url(a.Billede)" alt="">
+    }
+    @Html.Raw(Tekst.TilHtml(a.Indhold))
+</article>
