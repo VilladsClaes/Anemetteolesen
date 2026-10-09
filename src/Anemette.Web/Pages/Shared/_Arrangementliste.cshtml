@@ -1,0 +1,24 @@
+@model IEnumerable<Arrangement>
+@if (!Model.Any())
+{
+    <p><em>Der er ingen planlagte arrangementer lige nu.</em> Kontakt mig gerne, hvis I vil booke et foredrag, en naturvandring eller et kursus.</p>
+}
+else
+{
+    <ul class="arrangementer">
+        @foreach (var a in Model)
+        {
+            <li class="arrangement">
+                <p class="dato"><strong>@a.Start.ToString("d. MMM", Tekst.Dansk)</strong>@a.Start.ToString("yyyy", Tekst.Dansk)</p>
+                <div>
+                    <h3><a href="/arrangementer/@a.Id">@a.Titel</a></h3>
+                    <p class="detaljer">
+                        @a.Type.Visningsnavn() · @Tekst.Dato(a.Start), kl. @a.Start.ToString("HH.mm")@(string.IsNullOrEmpty(a.Sted) ? "" : " · " + a.Sted)
+                        @(a.Pris is > 0 ? " · " + Tekst.Kr(a.Pris.Value) : "")
+                    </p>
+                    <a href="/arrangementer/@a.Id">Læs mere@(a.Pladser is > 0 ? " og tilmeld dig" : "")</a>
+                </div>
+            </li>
+        }
+    </ul>
+}

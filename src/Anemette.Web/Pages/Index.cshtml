@@ -1,0 +1,76 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "";
+}
+
+<section class="tekst centreret">
+    <h1>@(Model.Velkomst?.Titel ?? "Urter, natur og gamle haver")</h1>
+    <div class="indledning markdown">@Html.Raw(Tekst.TilHtml(Model.Velkomst?.Indhold))</div>
+    <div class="knaprad centreret">
+        <a class="knap" href="/boeger">Se alle bøgerne</a>
+        <a class="knap knap-sekundaer" href="/foredrag">Foredrag og naturvandringer</a>
+    </div>
+</section>
+
+@if (Model.Fremhaevede.Count > 0)
+{
+    <partial name="_Skillelinje" />
+    <section aria-labelledby="udvalgte">
+        <h2 id="udvalgte" class="centreret">Udvalgte bøger</h2>
+        <ul class="bogliste">
+            @foreach (var bog in Model.Fremhaevede)
+            {
+                <partial name="_Bogkort" model="bog" />
+            }
+        </ul>
+        <p class="centreret"><a href="/boeger">Se alle bøgerne</a></p>
+    </section>
+}
+
+@if (Model.KommerSnart.Count > 0)
+{
+    <partial name="_Skillelinje" />
+    <section aria-labelledby="snart">
+        <h2 id="snart" class="centreret">Kommende udgivelser</h2>
+        <ul class="bogliste">
+            @foreach (var bog in Model.KommerSnart)
+            {
+                <partial name="_Bogkort" model="bog" />
+            }
+        </ul>
+    </section>
+}
+
+<partial name="_Skillelinje" />
+
+<div class="to-spalter">
+    <section aria-labelledby="kalender">
+        <h2 id="kalender">Kommende foredrag og naturvandringer</h2>
+        <partial name="_Arrangementliste" model="Model.Kommende" />
+    </section>
+    <section aria-labelledby="nyt">
+        <h2 id="nyt">Nyt fra haven og skrivebordet</h2>
+        @if (Model.Nyheder.Count == 0)
+        {
+            <p><em>Der kommer snart nyt her.</em></p>
+        }
+        else
+        {
+            <ul class="artikler">
+                @foreach (var a in Model.Nyheder)
+                {
+                    <li>
+                        <h3><a href="/nyt/@a.Slug">@a.Titel</a></h3>
+                        <p class="dato-linje">@Tekst.DatoKort(a.Udgivet)</p>
+                        @if (!string.IsNullOrEmpty(a.Indledning))
+                        {
+                            <p>@a.Indledning</p>
+                        }
+                    </li>
+                }
+            </ul>
+            <p><a href="/nyt">Alle nyheder</a></p>
+        }
+    </section>
+</div>

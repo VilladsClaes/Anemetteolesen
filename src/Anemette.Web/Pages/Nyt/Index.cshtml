@@ -1,0 +1,33 @@
+@page "/nyt"
+@model Anemette.Web.Pages.Nyt.IndexModel
+@{
+    ViewData["Title"] = "Nyt";
+    ViewData["Beskrivelse"] = "Nyt fra Anemette Olesen: ny viden om urter og planter, kommende udgivelser og nyheder fra Skarresøhus Forlag.";
+}
+
+<section class="tekst">
+    <h1>Nyt fra haven og skrivebordet</h1>
+    <p class="indledning">Udvalgt ny viden om urter og planter, nyheder om kommende bøger og andet, jeg gerne vil fortælle om.</p>
+
+    @if (Model.Artikler.Count == 0)
+    {
+        <p><em>Der kommer snart nyt her.</em></p>
+    }
+    else
+    {
+        <ul class="artikler">
+            @foreach (var a in Model.Artikler)
+            {
+                <li>
+                    <h2><a href="/nyt/@a.Slug">@a.Titel</a></h2>
+                    <p class="dato-linje">@Tekst.DatoKort(a.Udgivet)</p>
+                    @if (!string.IsNullOrEmpty(a.Indledning))
+                    {
+                        <p>@a.Indledning</p>
+                    }
+                    <a href="/nyt/@a.Slug">Læs hele artiklen<span class="skjult-tekst"> om @a.Titel</span></a>
+                </li>
+            }
+        </ul>
+    }
+</section>

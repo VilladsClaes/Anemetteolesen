@@ -1,0 +1,29 @@
+@page "/om"
+@model OmModel
+@{
+    ViewData["Title"] = "Om Anemette Olesen";
+    ViewData["Beskrivelse"] = "Anemette Olesen er forfatter, urtekyndig, foredragsholder og fotograf og driver Skarresøhus Forlag på Djursland.";
+}
+
+<div class="to-spalter">
+    <article class="markdown">
+        <h1>@Model.Side.Titel</h1>
+        @Html.Raw(Tekst.TilHtml(Model.Side.Indhold))
+    </article>
+    <aside>
+        <figure class="ramme">
+            <img src="/Uploads/blog.jpg" alt="Anemette Olesen blandt sine urter" width="294" height="146">
+        </figure>
+        <figure class="ramme">
+            <img src="/Uploads/urtekurser-1.jpg" alt="Bundter af urter hænger til tørre" width="294" height="146" loading="lazy">
+        </figure>
+    </aside>
+</div>
+
+<partial name="_Skillelinje" />
+
+<section class="markdown tekst" aria-labelledby="forlaget">
+    <h2 id="forlaget">@Model.Forlaget.Titel</h2>
+    @Html.Raw(Tekst.TilHtml(Model.Forlaget.Indhold))
+    <p><a href="/boeger">Se alle bøgerne fra forlaget</a></p>
+</section>

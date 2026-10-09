@@ -1,0 +1,95 @@
+@page "/admin"
+@model Anemette.Web.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Administration";
+}
+
+<h1>Oversigt</h1>
+
+@if (!Model.MailErSatOp)
+{
+    <p class="besked besked-fejl">Mailafsendelse er ikke sat op endnu. Bestillinger, tilmeldinger og beskeder gemmes stadig og kan ses her, men der sendes ingen mails. Se README.md om SMTP.</p>
+}
+
+<div class="noegletal">
+    <div><strong>@Model.NyeOrdrer</strong> <a href="/admin/ordrer">nye ordrer</a></div>
+    <div><strong>@Model.UlaesteBeskeder</strong> <a href="/admin/beskeder">ulæste beskeder</a></div>
+    <div><strong>@Model.SolgtIAar</strong> bøger solgt i år</div>
+    <div><strong>@Tekst.Kr(Model.OmsaetningIAar)</strong> omsætning i år</div>
+    <div><strong>@Model.SolgtIAlt</strong> bøger solgt i alt</div>
+    <div><strong>@Model.BoegerPaaLager</strong> bøger på lager</div>
+</div>
+
+<div class="to-spalter">
+    <section>
+        <h2>Mest solgte bøger</h2>
+        @if (Model.MestSolgte.Count == 0)
+        {
+            <p>Der er ikke solgt nogen bøger via hjemmesiden endnu.</p>
+        }
+        else
+        {
+            <table>
+                <thead><tr><th>Bog</th><th class="tal">Solgt</th><th class="tal">Beløb</th></tr></thead>
+                <tbody>
+                    @foreach (var b in Model.MestSolgte)
+                    {
+                        <tr><td>@b.Titel</td><td class="tal">@b.Antal</td><td class="tal">@Tekst.Kr(b.Beloeb)</td></tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <h2>Salg de seneste 12 måneder</h2>
+        <table>
+            <thead><tr><th>Måned</th><th class="tal">Bøger</th><th class="tal">Beløb</th></tr></thead>
+            <tbody>
+                @foreach (var m in Model.Maaneder)
+                {
+                    <tr><td>@m.Maaned</td><td class="tal">@m.Antal</td><td class="tal">@Tekst.Kr(m.Beloeb)</td></tr>
+                }
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Lavt lager</h2>
+        @if (Model.LavtLager.Count == 0)
+        {
+            <p>Alle bøger til salg har mindst 3 på lager.</p>
+        }
+        else
+        {
+            <table>
+                <thead><tr><th>Bog</th><th class="tal">På lager</th></tr></thead>
+                <tbody>
+                    @foreach (var b in Model.LavtLager)
+                    {
+                        <tr><td><a href="/admin/boeger/rediger/@b.Id">@b.Titel</a></td><td class="tal">@b.Lager</td></tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <h2>Kommende arrangementer</h2>
+        @if (Model.Kommende.Count == 0)
+        {
+            <p>Ingen planlagte. <a href="/admin/arrangementer/rediger">Opret et arrangement</a></p>
+        }
+        else
+        {
+            <table>
+                <thead><tr><th>Arrangement</th><th class="tal">Tilmeldte</th></tr></thead>
+                <tbody>
+                    @foreach (var (a, tilmeldte) in Model.Kommende)
+                    {
+                        <tr>
+                            <td><a href="/admin/arrangementer/rediger/@a.Id">@a.Titel</a><br><span class="hjaelp">@Tekst.DatoKort(a.Start)</span></td>
+                            <td class="tal">@tilmeldte@(a.Pladser is > 0 ? " / " + a.Pladser : "")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </section>
+</div>

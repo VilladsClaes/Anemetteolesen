@@ -1,0 +1,33 @@
+@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    var sti = Context.Request.Path.Value ?? "";
+    string? Aktiv(string link) =>
+        (link == "/admin" ? sti.Equals("/admin", StringComparison.OrdinalIgnoreCase) : sti.StartsWith(link, StringComparison.OrdinalIgnoreCase)) ? "page" : null;
+}
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <nav class="admin-menu" aria-label="Administration">
+        <ul>
+            <li><a href="/admin" aria-current="@Aktiv("/admin")">Oversigt</a></li>
+            <li><a href="/admin/ordrer" aria-current="@Aktiv("/admin/ordrer")">Ordrer</a></li>
+            <li><a href="/admin/boeger" aria-current="@Aktiv("/admin/boeger")">Bøger og lager</a></li>
+            <li><a href="/admin/arrangementer" aria-current="@Aktiv("/admin/arrangementer")">Arrangementer</a></li>
+            <li><a href="/admin/artikler" aria-current="@Aktiv("/admin/artikler")">Nyt</a></li>
+            <li><a href="/admin/sider" aria-current="@Aktiv("/admin/sider")">Sidetekster</a></li>
+            <li><a href="/admin/beskeder" aria-current="@Aktiv("/admin/beskeder")">Beskeder</a></li>
+            <li><a href="/admin/indstillinger" aria-current="@Aktiv("/admin/indstillinger")">Indstillinger</a></li>
+            <li><a href="/admin/konto" aria-current="@Aktiv("/admin/konto")">Konto</a></li>
+            <li>
+                <form method="post" asp-page="/Admin/Logud" class="inline">
+                    <button type="submit" class="link-knap">Log ud (@User.Identity.Name)</button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+}
+@if (TempData["AdminBesked"] is string besked)
+{
+    <p class="besked besked-ok" role="status">@besked</p>
+}
+@RenderBody()
+<script src="~/js/admin.js" asp-append-version="true"></script>

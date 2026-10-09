@@ -1,0 +1,68 @@
+@page "/admin/ordrer/{id:int}"
+@model Anemette.Web.Pages.Admin.Ordrer.VisModel
+@{
+    var o = Model.Ordre;
+    ViewData["Title"] = $"Ordre {o.Id}";
+}
+
+<p><a href="/admin/ordrer">← Alle ordrer</a></p>
+<h1>Ordre nr. @o.Id</h1>
+<p>Bestilt @Tekst.Dato(Tekst.DanskTid(o.Oprettet)) kl. @Tekst.DanskTid(o.Oprettet).ToString("HH.mm") · Status: <strong>@o.Status.Visningsnavn()</strong>@(o.Sendt != null ? $" ({Tekst.DatoKort(Tekst.DanskTid(o.Sendt.Value))})" : "")</p>
+
+<div class="to-spalter">
+    <section>
+        <h2>Bøger</h2>
+        <table>
+            <thead><tr><th>Bog</th><th class="tal">Antal</th><th class="tal">Stk.</th><th class="tal">Beløb</th></tr></thead>
+            <tbody>
+                @foreach (var l in o.Linjer)
+                {
+                    <tr><td>@l.Titel</td><td class="tal">@l.Antal</td><td class="tal">@Tekst.Kr(l.Stykpris)</td><td class="tal">@Tekst.Kr(l.Antal * l.Stykpris)</td></tr>
+                }
+            </tbody>
+            <tfoot><tr><td colspan="3">I alt (uden porto)</td><td class="tal">@Tekst.Kr(o.Total)</td></tr></tfoot>
+        </table>
+
+        <div class="knaprad">
+            @if (o.Status == OrdreStatus.Ny)
+            {
+                <form method="post" asp-page-handler="Sendt" asp-route-id="@o.Id">
+                    <button type="submit" class="knap">Markér som sendt</button>
+                </form>
+            }
+            @if (o.Status != OrdreStatus.Annulleret)
+            {
+                <form method="post" asp-page-handler="Annuller" asp-route-id="@o.Id" data-bekraeft="Vil du annullere ordren? Bøgerne lægges tilbage på lageret.">
+                    <button type="submit" class="knap knap-fare">Annullér ordren</button>
+                </form>
+            }
+        </div>
+    </section>
+
+    <aside class="ramme">
+        <h2>Sendes til</h2>
+        @if (o.Anonymiseret)
+        {
+            <p>Kundens oplysninger er slettet efter bogføringslovens 5 år.</p>
+        }
+        else
+        {
+            <address class="kontaktkort">
+                <p>@o.Navn<br>@o.Adresse<br>@o.Postnummer @o.By</p>
+                <p>Telefon: <a href="tel:@o.Telefon">@o.Telefon</a><br>E-mail: <a href="mailto:@o.Email">@o.Email</a></p>
+            </address>
+            @if (!string.IsNullOrEmpty(o.Besked))
+            {
+                <h3>Besked fra kunden</h3>
+                <p>@o.Besked</p>
+            }
+        }
+        <form method="post" asp-page-handler="Note" asp-route-id="@o.Id">
+            <div class="felt">
+                <label for="note">Egen note (fx faktura sendt, betalt)</label>
+                <textarea id="note" name="Note" rows="3">@Model.Note</textarea>
+            </div>
+            <button type="submit" class="knap knap-sekundaer knap-lille">Gem note</button>
+        </form>
+    </aside>
+</div>

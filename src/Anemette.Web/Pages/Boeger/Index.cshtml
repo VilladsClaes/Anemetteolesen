@@ -1,0 +1,50 @@
+@page "/boeger"
+@model Anemette.Web.Pages.Boeger.IndexModel
+@{
+    ViewData["Title"] = "Bøger";
+    ViewData["Beskrivelse"] = "Bøger af Anemette Olesen om urter, lægeplanter, vilde spiselige planter, haver og grøn mad. Bestil direkte fra Skarresøhus Forlag.";
+}
+
+<h1>Bøger</h1>
+<div class="tekst markdown">@Html.Raw(Tekst.TilHtml(Model.Bestillingstekst?.Indhold))</div>
+
+<form method="get" action="/boeger" role="search" class="felt">
+    <label for="soeg">Søg efter en bog</label>
+    <div class="knaprad">
+        <input type="search" id="soeg" name="soeg" value="@Model.Soeg" placeholder="Fx urter, honning eller Hildegard">
+        @if (!string.IsNullOrEmpty(Model.Emne))
+        {
+            <input type="hidden" name="emne" value="@Model.Emne">
+        }
+        <button type="submit" class="knap">Søg</button>
+    </div>
+</form>
+
+<nav aria-label="Emner">
+    <ul class="emner">
+        <li><a href="/boeger" aria-current="@(string.IsNullOrEmpty(Model.Emne) ? "true" : null)">Alle bøger</a></li>
+        @foreach (var emne in Model.Emner)
+        {
+            <li><a href="/boeger?emne=@Uri.EscapeDataString(emne)" aria-current="@(emne == Model.Emne ? "true" : null)">@emne</a></li>
+        }
+    </ul>
+</nav>
+
+@if (!string.IsNullOrWhiteSpace(Model.Soeg))
+{
+    <p>Søgning efter «@Model.Soeg»: @Model.Boeger.Count @(Model.Boeger.Count == 1 ? "bog" : "bøger"). <a href="/boeger@(string.IsNullOrEmpty(Model.Emne) ? "" : "?emne=" + Uri.EscapeDataString(Model.Emne))">Vis alle</a></p>
+}
+
+@if (Model.Boeger.Count == 0)
+{
+    <p>Der blev ikke fundet nogen bøger. Prøv et andet ord, eller ring til mig – så finder vi den rigtige bog.</p>
+}
+else
+{
+    <ul class="bogliste">
+        @foreach (var bog in Model.Boeger)
+        {
+            <partial name="_Bogkort" model="bog" />
+        }
+    </ul>
+}

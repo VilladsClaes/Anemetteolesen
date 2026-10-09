@@ -1,0 +1,95 @@
+@page "/admin/arrangementer/rediger/{id:int?}"
+@model Anemette.Web.Pages.Admin.Arrangementer.RedigerModel
+@{
+    ViewData["Title"] = Model.ErNy ? "Nyt arrangement" : "Ret arrangement";
+}
+
+<p><a href="/admin/arrangementer">← Alle arrangementer</a></p>
+<h1>@(Model.ErNy ? "Nyt arrangement" : Model.Arrangement.Titel)</h1>
+
+<form method="post" novalidate>
+    <input type="hidden" asp-for="Arrangement.Id">
+    <div class="felt">
+        <label asp-for="Arrangement.Type"></label>
+        <select asp-for="Arrangement.Type">
+            @foreach (var t in Enum.GetValues<ArrangementType>())
+            {
+                <option value="@t">@t.Visningsnavn()</option>
+            }
+        </select>
+    </div>
+    <div class="felt">
+        <label asp-for="Arrangement.Titel"></label>
+        <input asp-for="Arrangement.Titel">
+        <span asp-validation-for="Arrangement.Titel" class="felt-fejl"></span>
+    </div>
+    <div class="felt">
+        <label asp-for="Arrangement.Start"></label>
+        <input asp-for="Arrangement.Start" type="datetime-local">
+    </div>
+    <div class="felt">
+        <label asp-for="Arrangement.Sted"></label>
+        <input asp-for="Arrangement.Sted" placeholder="Fx Ebeltoft Bibliotek, Jernbanegade 4">
+    </div>
+    <div class="felt">
+        <label asp-for="Arrangement.Beskrivelse"></label>
+        <textarea asp-for="Arrangement.Beskrivelse" rows="6"></textarea>
+    </div>
+    <div class="to-felter">
+        <div class="felt">
+            <label asp-for="Arrangement.Pris"></label>
+            <input asp-for="Arrangement.Pris" type="number" step="1" min="0">
+        </div>
+        <div class="felt">
+            <label asp-for="Arrangement.Pladser"></label>
+            <input asp-for="Arrangement.Pladser" type="number" min="0">
+        </div>
+    </div>
+    <div class="felt">
+        <label class="afkryds"><input asp-for="Arrangement.Synlig"> <span>Vis på hjemmesiden</span></label>
+    </div>
+    <div class="knaprad">
+        <button type="submit" class="knap">Gem</button>
+        <a href="/admin/arrangementer">Fortryd</a>
+    </div>
+</form>
+
+@if (!Model.ErNy)
+{
+    <h2>Tilmeldinger (@Model.Tilmeldinger.Sum(t => t.Antal) personer)</h2>
+    @if (Model.Tilmeldinger.Count == 0)
+    {
+        <p>Ingen endnu.</p>
+    }
+    else
+    {
+        <div class="tabel-rul">
+            <table>
+                <thead><tr><th>Navn</th><th>Telefon</th><th>E-mail</th><th class="tal">Antal</th><th>Besked</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var t in Model.Tilmeldinger)
+                    {
+                        <tr>
+                            <td>@t.Navn</td>
+                            <td><a href="tel:@t.Telefon">@t.Telefon</a></td>
+                            <td><a href="mailto:@t.Email">@t.Email</a></td>
+                            <td class="tal">@t.Antal</td>
+                            <td>@t.Besked</td>
+                            <td>
+                                <form method="post" asp-page-handler="SletTilmelding" asp-route-id="@Model.Arrangement.Id" data-bekraeft="Vil du slette tilmeldingen fra @t.Navn?">
+                                    <input type="hidden" name="tilmeldingId" value="@t.Id">
+                                    <button type="submit" class="knap knap-sekundaer knap-lille">Slet</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <partial name="_Skillelinje" />
+    <form method="post" asp-page-handler="Slet" asp-route-id="@Model.Arrangement.Id" data-bekraeft="Vil du slette arrangementet og alle tilmeldinger til det?">
+        <button type="submit" class="knap knap-fare">Slet arrangementet</button>
+    </form>
+}

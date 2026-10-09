@@ -1,0 +1,33 @@
+@page "/admin/beskeder"
+@model BeskederModel
+@{
+    ViewData["Title"] = "Beskeder";
+}
+
+<h1>Beskeder fra kontaktformularen</h1>
+<p>Beskederne sendes også til din e-mail. Gamle beskeder slettes automatisk efter to år.</p>
+
+@if (Model.Beskeder.Count == 0)
+{
+    <p>Der er ingen beskeder.</p>
+}
+@foreach (var b in Model.Beskeder)
+{
+    <article class="ramme">
+        <h2>@(b.Laest ? "" : "Ny: ")@b.Emne</h2>
+        <p class="dato-linje">@Tekst.DatoKort(Tekst.DanskTid(b.Oprettet)) kl. @Tekst.DanskTid(b.Oprettet).ToString("HH.mm") – fra @b.Navn, <a href="mailto:@b.Email?subject=Sv: @Uri.EscapeDataString(b.Emne)">@b.Email</a>@(b.Telefon is null ? "" : ", tlf. " + b.Telefon)</p>
+        <p>@b.Besked</p>
+        <div class="knaprad">
+            <a class="knap knap-lille" href="mailto:@b.Email?subject=Sv: @Uri.EscapeDataString(b.Emne)">Svar på mail</a>
+            @if (!b.Laest)
+            {
+                <form method="post" asp-page-handler="Laest" asp-route-id="@b.Id">
+                    <button type="submit" class="knap knap-sekundaer knap-lille">Markér som læst</button>
+                </form>
+            }
+            <form method="post" asp-page-handler="Slet" asp-route-id="@b.Id" data-bekraeft="Vil du slette beskeden fra @b.Navn?">
+                <button type="submit" class="knap knap-sekundaer knap-lille">Slet</button>
+            </form>
+        </div>
+    </article>
+}

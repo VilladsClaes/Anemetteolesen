@@ -1,0 +1,16 @@
+@page "/kurv/tak"
+@{
+    ViewData["Title"] = "Tak for din bestilling";
+    var nummer = TempData["OrdreNummer"];
+}
+
+<section class="tekst">
+    <h1>Tak for din bestilling</h1>
+    @if (nummer != null)
+    {
+        <p class="besked besked-ok" role="status">Din bestilling har nummer <strong>@nummer</strong>.</p>
+    }
+    <p>Jeg har modtaget din bestilling og sender bøgerne hurtigst muligt sammen med en faktura. Du får også en bekræftelse på e-mail.</p>
+    <p>Har du spørgsmål, er du altid velkommen til at <a href="/kontakt">kontakte mig</a>.</p>
+    <p><a class="knap" href="/">Til forsiden</a></p>
+</section>

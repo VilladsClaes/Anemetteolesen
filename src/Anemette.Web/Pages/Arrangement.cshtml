@@ -1,0 +1,86 @@
+@page "/arrangementer/{id:int}"
+@model ArrangementModel
+@{
+    var a = Model.Arrangement;
+    ViewData["Title"] = a.Titel;
+    var tilbage = a.Type == ArrangementType.Foredrag ? ("/foredrag", "foredrag") : ("/naturvandringer", "naturvandringer og kurser");
+}
+
+<p><a href="@tilbage.Item1">← Tilbage til @tilbage.Item2</a></p>
+
+<div class="to-spalter">
+    <article>
+        <p class="dato-linje">@a.Type.Visningsnavn()</p>
+        <h1>@a.Titel</h1>
+        <dl class="fakta">
+            <dt>Hvornår</dt><dd>@Tekst.Dato(a.Start), kl. @a.Start.ToString("HH.mm")</dd>
+            @if (!string.IsNullOrEmpty(a.Sted)) { <dt>Hvor</dt><dd>@a.Sted</dd> }
+            <dt>Pris</dt><dd>@(a.Pris is > 0 ? Tekst.Kr(a.Pris.Value) : "Gratis")</dd>
+            @if (a.Pladser is > 0) { <dt>Ledige pladser</dt><dd>@Model.LedigePladser</dd> }
+        </dl>
+        <div class="markdown tekst">@Html.Raw(Tekst.TilHtml(a.Beskrivelse))</div>
+    </article>
+
+    <aside>
+        @if (Model.Besked != null)
+        {
+            <p class="besked besked-ok" role="status">@Model.Besked</p>
+        }
+        @if (Model.ErOvre)
+        {
+            <p class="besked">Arrangementet er afholdt.</p>
+        }
+        else if (a.Pladser is not > 0)
+        {
+            <p>Der er ingen tilmelding – mød blot op. Har du spørgsmål, så <a href="/kontakt">kontakt mig</a>.</p>
+        }
+        else if (!Model.KanTilmelde)
+        {
+            <p class="besked besked-fejl">Der er desværre ikke flere ledige pladser. <a href="/kontakt">Skriv til mig</a>, hvis du vil på venteliste.</p>
+        }
+        else
+        {
+            <section class="ramme" aria-labelledby="tilmelding">
+                <h2 id="tilmelding">Tilmelding</h2>
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="besked besked-fejl" role="alert" asp-validation-summary="ModelOnly">Der mangler noget i formularen.</div>
+                }
+                <form method="post" novalidate>
+                    <div class="felt">
+                        <label asp-for="Input.Navn"></label>
+                        <input asp-for="Input.Navn" autocomplete="name">
+                        <span asp-validation-for="Input.Navn" class="felt-fejl"></span>
+                    </div>
+                    <div class="felt">
+                        <label asp-for="Input.Email"></label>
+                        <input asp-for="Input.Email" type="email" autocomplete="email">
+                        <span asp-validation-for="Input.Email" class="felt-fejl"></span>
+                    </div>
+                    <div class="felt">
+                        <label asp-for="Input.Telefon"></label>
+                        <input asp-for="Input.Telefon" type="tel" autocomplete="tel">
+                        <span asp-validation-for="Input.Telefon" class="felt-fejl"></span>
+                    </div>
+                    <div class="felt">
+                        <label asp-for="Input.Antal"></label>
+                        <input asp-for="Input.Antal" type="number" min="1" max="@Math.Min(20, Model.LedigePladser)">
+                        <span asp-validation-for="Input.Antal" class="felt-fejl"></span>
+                    </div>
+                    <div class="felt">
+                        <label asp-for="Input.Besked"></label>
+                        <textarea asp-for="Input.Besked" rows="3"></textarea>
+                    </div>
+                    <div class="felt">
+                        <label class="afkryds">
+                            <input asp-for="Input.Samtykke">
+                            <span>Jeg har læst, at mine oplysninger kun bruges i forbindelse med arrangementet. <a href="/privatliv" target="_blank">Læs mere</a></span>
+                        </label>
+                        <span asp-validation-for="Input.Samtykke" class="felt-fejl"></span>
+                    </div>
+                    <button type="submit" class="knap">Tilmeld</button>
+                </form>
+            </section>
+        }
+    </aside>
+</div>

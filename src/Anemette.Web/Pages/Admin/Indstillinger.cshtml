@@ -1,0 +1,19 @@
+@page "/admin/indstillinger"
+@model IndstillingerModel
+@{
+    ViewData["Title"] = "Indstillinger";
+}
+
+<h1>Kontaktoplysninger og indstillinger</h1>
+<p>Oplysningerne vises nederst på alle sider og på kontaktsiden. «Ordrer sendes til» er den e-mail, der får besked om nye bestillinger og tilmeldinger.</p>
+
+<form method="post">
+    @foreach (var i in Model.Liste)
+    {
+        <div class="felt">
+            <label for="i-@i.Noegle.GetHashCode()">@i.Noegle</label>
+            <input type="text" id="i-@i.Noegle.GetHashCode()" name="vaerdi[@i.Noegle]" value="@i.Vaerdi">
+        </div>
+    }
+    <button type="submit" class="knap">Gem</button>
+</form>

@@ -1,0 +1,44 @@
+@page "/admin/sider/{noegle?}"
+@model Anemette.Web.Pages.Admin.Sider.IndexModel
+@{
+    ViewData["Title"] = "Sidetekster";
+}
+
+@if (Model.Valgt is null)
+{
+    <h1>Sidetekster</h1>
+    <p>Her retter du teksterne på hjemmesidens faste sider.</p>
+    <table>
+        <thead><tr><th>Tekst</th><th>Vises på</th><th>Sidst rettet</th></tr></thead>
+        <tbody>
+            @foreach (var s in Model.Sider)
+            {
+                var (navn, url) = Anemette.Web.Pages.Admin.Sider.IndexModel.Placering.GetValueOrDefault(s.Noegle, (s.Titel, "/"));
+                <tr>
+                    <td><a href="/admin/sider/@s.Noegle">@navn</a></td>
+                    <td><a href="@url" target="_blank">@url</a></td>
+                    <td>@Tekst.DatoKort(Tekst.DanskTid(s.Opdateret))</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><a href="/admin/sider">← Alle sidetekster</a></p>
+    <h1>Ret tekst</h1>
+    <form method="post" novalidate>
+        <div class="felt">
+            <label for="titel">Overskrift</label>
+            <input type="text" id="titel" name="Valgt.Titel" value="@Model.Valgt.Titel">
+        </div>
+        <div class="felt">
+            <label for="indhold">Tekst<span class="hjaelp">Tom linje giver nyt afsnit. Start en linje med ## for en mellemrubrik, ### for en lille rubrik og - for en punktliste. **fed** og *kursiv* kan bruges.</span></label>
+            <textarea id="indhold" name="Valgt.Indhold" rows="24">@Model.Valgt.Indhold</textarea>
+        </div>
+        <div class="knaprad">
+            <button type="submit" class="knap">Gem teksten</button>
+            <a href="/admin/sider">Fortryd</a>
+        </div>
+    </form>
+}

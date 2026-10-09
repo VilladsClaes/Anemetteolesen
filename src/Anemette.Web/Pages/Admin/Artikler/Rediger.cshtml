@@ -1,0 +1,53 @@
+@page "/admin/artikler/rediger/{id:int?}"
+@model Anemette.Web.Pages.Admin.Artikler.RedigerModel
+@{
+    ViewData["Title"] = Model.ErNy ? "Ny artikel" : "Ret artikel";
+}
+
+<p><a href="/admin/artikler">← Alle artikler</a></p>
+<h1>@(Model.ErNy ? "Ny artikel" : Model.Artikel.Titel)</h1>
+
+<form method="post" enctype="multipart/form-data" novalidate>
+    <input type="hidden" asp-for="Artikel.Id">
+    <div class="felt">
+        <label asp-for="Artikel.Titel"></label>
+        <input asp-for="Artikel.Titel">
+        <span asp-validation-for="Artikel.Titel" class="felt-fejl"></span>
+    </div>
+    <div class="felt">
+        <label asp-for="Artikel.Udgivet"></label>
+        <input asp-for="Artikel.Udgivet" type="date">
+    </div>
+    <div class="felt">
+        <label asp-for="Artikel.Indledning"><span class="hjaelp">Et par linjer, der vises i oversigten.</span></label>
+        <textarea asp-for="Artikel.Indledning" rows="3"></textarea>
+    </div>
+    <div class="felt">
+        <label asp-for="Artikel.Indhold"><span class="hjaelp">Tom linje giver nyt afsnit. Start en linje med ## for en mellemrubrik og - for en punktliste. **fed** og *kursiv* kan bruges.</span></label>
+        <textarea asp-for="Artikel.Indhold" rows="16"></textarea>
+    </div>
+    <div class="felt">
+        @if (!string.IsNullOrEmpty(Model.Artikel.Billede))
+        {
+            <img class="lille-omslag" src="@UploadMappe.Url(Model.Artikel.Billede)" alt="Nuværende billede">
+        }
+        <label asp-for="NytBillede">Billede (valgfrit)<span class="hjaelp">JPG, PNG, GIF eller WebP – højst 10 MB.</span></label>
+        <input asp-for="NytBillede" type="file" accept="image/jpeg,image/png,image/gif,image/webp">
+        <span asp-validation-for="NytBillede" class="felt-fejl"></span>
+    </div>
+    <div class="felt">
+        <label class="afkryds"><input asp-for="Artikel.Synlig"> <span>Vis på hjemmesiden</span></label>
+    </div>
+    <div class="knaprad">
+        <button type="submit" class="knap">Gem artiklen</button>
+        <a href="/admin/artikler">Fortryd</a>
+    </div>
+</form>
+
+@if (!Model.ErNy)
+{
+    <partial name="_Skillelinje" />
+    <form method="post" asp-page-handler="Slet" asp-route-id="@Model.Artikel.Id" data-bekraeft="Vil du slette artiklen?">
+        <button type="submit" class="knap knap-fare">Slet artiklen</button>
+    </form>
+}

@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Anemette.Web/Anemette.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Anemette.Tests/Anemette.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,30 @@
+@page "/admin/login"
+@model LoginModel
+@{
+    ViewData["Title"] = "Log ind";
+}
+
+<section class="tekst ramme">
+    <h1>@(Model.IngenAdministratorer ? "Opret administrator" : "Log ind")</h1>
+    @if (Model.IngenAdministratorer)
+    {
+        <p>Der er endnu ingen administratorer. Vælg et brugernavn og en adgangskode på mindst @AdminLogin.MindsteLaengde tegn – så bliver du oprettet og logget ind.</p>
+    }
+    @if (Model.Fejl != null)
+    {
+        <p class="besked besked-fejl" role="alert">@Model.Fejl</p>
+    }
+    <form method="post" novalidate>
+        <div class="felt">
+            <label asp-for="Brugernavn"></label>
+            <input asp-for="Brugernavn" autocomplete="username">
+            <span asp-validation-for="Brugernavn" class="felt-fejl"></span>
+        </div>
+        <div class="felt">
+            <label asp-for="Adgangskode"></label>
+            <input asp-for="Adgangskode" autocomplete="@(Model.IngenAdministratorer ? "new-password" : "current-password")">
+            <span asp-validation-for="Adgangskode" class="felt-fejl"></span>
+        </div>
+        <button type="submit" class="knap">@(Model.IngenAdministratorer ? "Opret og log ind" : "Log ind")</button>
+    </form>
+</section>

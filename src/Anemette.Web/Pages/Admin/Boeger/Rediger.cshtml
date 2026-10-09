@@ -1,0 +1,115 @@
+@page "/admin/boeger/rediger/{id:int?}"
+@model Anemette.Web.Pages.Admin.Boeger.RedigerModel
+@{
+    ViewData["Title"] = Model.ErNy ? "Ny bog" : "Ret bog";
+}
+
+<p><a href="/admin/boeger">← Tilbage til bøgerne</a></p>
+<h1>@(Model.ErNy ? "Ny bog" : Model.Bog.Titel)</h1>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <p class="besked besked-fejl" role="alert">Der mangler noget. Se de røde beskeder herunder.</p>
+}
+
+<form method="post" enctype="multipart/form-data" novalidate>
+    <input type="hidden" asp-for="Bog.Id">
+    <div class="to-spalter">
+        <div>
+            <div class="felt">
+                <label asp-for="Bog.Titel"></label>
+                <input asp-for="Bog.Titel">
+                <span asp-validation-for="Bog.Titel" class="felt-fejl"></span>
+            </div>
+            <div class="felt">
+                <label asp-for="Bog.Undertitel"></label>
+                <input asp-for="Bog.Undertitel">
+            </div>
+            <div class="felt">
+                <label asp-for="Bog.Beskrivelse"><span class="hjaelp">Tom linje giver nyt afsnit. **fed** og *kursiv* kan bruges.</span></label>
+                <textarea asp-for="Bog.Beskrivelse" rows="8"></textarea>
+            </div>
+            <div class="to-felter">
+                <div class="felt">
+                    <label asp-for="Bog.Pris"></label>
+                    <input asp-for="Bog.Pris" type="number" step="0.01" min="0">
+                    <span asp-validation-for="Bog.Pris" class="felt-fejl"></span>
+                </div>
+                <div class="felt">
+                    <label asp-for="Bog.Lager"></label>
+                    <input asp-for="Bog.Lager" type="number" min="0">
+                    <span asp-validation-for="Bog.Lager" class="felt-fejl"></span>
+                </div>
+            </div>
+            <div class="felt">
+                <label asp-for="Bog.Status"></label>
+                <select asp-for="Bog.Status">
+                    @foreach (var s in Enum.GetValues<BogStatus>())
+                    {
+                        <option value="@s">@s.Visningsnavn()</option>
+                    }
+                </select>
+                <span class="hjaelp">«Kommer snart» viser bogen under kommende udgivelser. «Skjult» fjerner den fra hjemmesiden.</span>
+            </div>
+            <div class="felt">
+                <label asp-for="Bog.Emne"></label>
+                <input asp-for="Bog.Emne" list="emner">
+                <datalist id="emner">@foreach (var e in Model.Emner) { <option value="@e"></option> }</datalist>
+            </div>
+            <div class="to-felter">
+                <div class="felt">
+                    <label asp-for="Bog.Udgivelsesaar"></label>
+                    <input asp-for="Bog.Udgivelsesaar" type="number" min="1900" max="2100">
+                </div>
+                <div class="felt">
+                    <label asp-for="Bog.Sider"></label>
+                    <input asp-for="Bog.Sider" type="number" min="1">
+                </div>
+            </div>
+            <div class="felt">
+                <label asp-for="Bog.Isbn"></label>
+                <input asp-for="Bog.Isbn">
+            </div>
+            <div class="felt">
+                <label class="afkryds"><input asp-for="Bog.Fremhaevet"> <span>Vis bogen under «Udvalgte bøger» på forsiden</span></label>
+            </div>
+        </div>
+        <div>
+            <h2>Forsidebillede</h2>
+            @if (!string.IsNullOrEmpty(Model.Bog.Forside))
+            {
+                <img class="omslag-billede" src="@UploadMappe.Url(Model.Bog.Forside)" alt="Nuværende forside">
+            }
+            else
+            {
+                <p>Bogen har ikke noget billede endnu.</p>
+            }
+            <div class="felt">
+                <label asp-for="NytBillede">@(string.IsNullOrEmpty(Model.Bog.Forside) ? "Vælg et billede" : "Skift billede")<span class="hjaelp">JPG, PNG, GIF eller WebP – højst 10 MB.</span></label>
+                <input asp-for="NytBillede" type="file" accept="image/jpeg,image/png,image/gif,image/webp">
+                <span asp-validation-for="NytBillede" class="felt-fejl"></span>
+            </div>
+        </div>
+    </div>
+    <div class="knaprad">
+        <button type="submit" class="knap">Gem bogen</button>
+        <a href="/admin/boeger">Fortryd</a>
+    </div>
+</form>
+
+@if (!Model.ErNy)
+{
+    <partial name="_Skillelinje" />
+    <div class="knaprad">
+        @if (!string.IsNullOrEmpty(Model.Bog.Forside))
+        {
+            <form method="post" asp-page-handler="FjernBillede" asp-route-id="@Model.Bog.Id">
+                <button type="submit" class="knap knap-sekundaer">Fjern billedet</button>
+            </form>
+        }
+        <form method="post" asp-page-handler="Slet" asp-route-id="@Model.Bog.Id" data-bekraeft="Vil du slette bogen? Det kan ikke fortrydes.">
+            <button type="submit" class="knap knap-fare">Slet bogen</button>
+        </form>
+    </div>
+    <p class="hjaelp">Vil du bare fjerne bogen fra hjemmesiden, så sæt status til «Skjult» i stedet for at slette den.</p>
+}

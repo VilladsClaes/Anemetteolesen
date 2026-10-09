@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 24" fill="none" stroke="#4a5d36" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 12 H 96" stroke="#b9ab86"/>
+  <path d="M144 12 H 236" stroke="#b9ab86"/>
+  <!-- Tre blade om et lille frø -->
+  <path d="M120 12 C 112 10, 104 4, 100 4 C 104 10, 112 13, 120 12 Z" fill="#e4e2c9"/>
+  <path d="M120 12 C 128 10, 136 4, 140 4 C 136 10, 128 13, 120 12 Z" fill="#e4e2c9"/>
+  <path d="M120 12 C 117 16, 118 20, 120 22 C 122 20, 123 16, 120 12 Z" fill="#e4e2c9"/>
+  <circle cx="120" cy="11" r="2" fill="#c9a96a"/>
+</svg>
