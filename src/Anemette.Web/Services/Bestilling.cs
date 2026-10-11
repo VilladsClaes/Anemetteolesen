@@ -119,7 +119,7 @@ public class Bestilling(AppDbContext db, Kurv kurv, Mail mail, Indstillinger ind
             """;
         var modtager = await indstillinger.HentAsync("Ordrer sendes til");
         if (!string.IsNullOrWhiteSpace(modtager))
-            await mail.SendAsync(modtager, $"Ny bestilling nr. {ordre.Id} fra {ordre.Navn}", tilAnemette, svarTil: ordre.Email, afsenderNavn: "Hjemmesiden");
+            await mail.SendAsync(modtager, $"Ny bestilling nr. {ordre.Id} fra {ordre.Navn}", tilAnemette, svarTil: ordre.Email);
 
         var k = await indstillinger.KontaktAsync();
         var tilKunden = $"""
@@ -139,6 +139,6 @@ public class Bestilling(AppDbContext db, Kurv kurv, Mail mail, Indstillinger ind
             {k.Forlag}
             {k.Adresse}, {k.PostnrBy}
             """;
-        await mail.SendAsync(ordre.Email, $"Tak for din bestilling hos {k.Forlag}", tilKunden, svarTil: k.Email, afsenderNavn: k.Forlag);
+        await mail.SendAsync(ordre.Email, $"Tak for din bestilling hos {k.Forlag}", tilKunden, svarTil: k.Email);
     }
 }

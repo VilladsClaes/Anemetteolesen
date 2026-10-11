@@ -85,7 +85,7 @@ public class ArrangementModel(AppDbContext db, Mail mail, Indstillinger indstill
                 {(string.IsNullOrWhiteSpace(Input.Besked) ? "" : "Besked: " + Input.Besked)}
 
                 Se alle tilmeldinger under Administration → Arrangementer.
-                """, svarTil: Input.Email, afsenderNavn: "Hjemmesiden");
+                """, svarTil: Input.Email);
         }
         var k = await indstillinger.KontaktAsync();
         await mail.SendAsync(Input.Email, $"Din tilmelding: {Arrangement.Titel}", $"""
@@ -98,7 +98,7 @@ public class ArrangementModel(AppDbContext db, Mail mail, Indstillinger indstill
 
             Venlig hilsen
             {k.Navn}
-            """, svarTil: k.Email, afsenderNavn: k.Forlag);
+            """, svarTil: k.Email);
 
         Besked = $"Tak, {Input.Navn}. Du er nu tilmeldt.";
         return RedirectToPage(new { id });

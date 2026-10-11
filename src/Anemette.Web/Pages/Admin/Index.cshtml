@@ -8,7 +8,13 @@
 
 @if (!Model.MailErSatOp)
 {
-    <p class="besked besked-fejl">Mailafsendelse er ikke sat op endnu. Bestillinger, tilmeldinger og beskeder gemmes stadig og kan ses her, men der sendes ingen mails. Se README.md om SMTP.</p>
+    <p class="besked besked-fejl">Mail via Microsoft 365 er ikke sat op endnu. Bestillinger, tilmeldinger og beskeder gemmes stadig og kan ses her, men der sendes ingen mails. Se README.md under «Mail».</p>
+}
+else
+{
+    <form method="post" asp-page-handler="Testmail" class="knaprad">
+        <button type="submit" class="knap knap-sekundaer knap-lille">Send en testmail til @Model.Afsender</button>
+    </form>
 }
 
 <div class="noegletal">
