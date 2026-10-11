@@ -19,7 +19,10 @@
         }
         @if (!ViewData.ModelState.IsValid)
         {
-            <p class="besked besked-fejl" role="alert">Der mangler noget i formularen. Se de røde beskeder herunder.</p>
+            <div class="besked besked-fejl" role="alert">
+                <p>Der mangler noget i formularen. Se de røde beskeder herunder.</p>
+                <div asp-validation-summary="ModelOnly"></div>
+            </div>
         }
 
         <form method="post" novalidate>
@@ -47,10 +50,7 @@
                 <textarea asp-for="Input.Besked" rows="7"></textarea>
                 <span asp-validation-for="Input.Besked" class="felt-fejl"></span>
             </div>
-            <div class="skjult-tekst" aria-hidden="true">
-                <label for="hjemmeside">Lad dette felt være tomt</label>
-                <input type="text" id="hjemmeside" name="Hjemmeside" tabindex="-1" autocomplete="off">
-            </div>
+            <partial name="_Spamvaern" />
             <div class="felt">
                 <label class="afkryds">
                     <input asp-for="Input.Samtykke">

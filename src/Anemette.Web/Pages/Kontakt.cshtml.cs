@@ -6,15 +6,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Anemette.Web.Pages;
 
-public class KontaktModel(AppDbContext db, Mail mail, Indstillinger indstillinger) : PageModel
+[Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("formular")]
+public class KontaktModel(AppDbContext db, Mail mail, Indstillinger indstillinger, SpamVaern spamVaern) : PageModel
 {
     public Kontaktinfo Kontakt { get; private set; } = null!;
 
     [TempData] public string? Besked { get; set; }
     [BindProperty] public Formular Input { get; set; } = new();
-
-    /// <summary>Usynligt felt, som kun robotter udfylder.</summary>
-    [BindProperty] public string? Hjemmeside { get; set; }
 
     public class Formular
     {
@@ -46,7 +44,16 @@ public class KontaktModel(AppDbContext db, Mail mail, Indstillinger indstillinge
     public async Task<IActionResult> OnPostAsync()
     {
         Kontakt = await indstillinger.KontaktAsync();
-        if (!string.IsNullOrEmpty(Hjemmeside)) return RedirectToPage(); // spam
+        switch (spamVaern.Vurder(Request.Form, Input.Navn, Input.Emne, Input.Besked, Input.Email))
+        {
+            case SpamVurdering.Robot or SpamVurdering.Indhold:
+                // Robotten får samme svar som et menneske, så den ikke lærer at komme uden om filteret
+                Besked = "Tak for din besked. Jeg svarer så hurtigt, jeg kan.";
+                return RedirectToPage();
+            case SpamVurdering.ForGammel:
+                ModelState.AddModelError("", "Siden har været åben længe. Tryk på «Send beskeden» igen.");
+                return Page();
+        }
         if (!ModelState.IsValid) return Page();
 
         db.Kontaktbeskeder.Add(new Kontaktbesked

@@ -5,7 +5,19 @@
 }
 
 <h1>Beskeder fra kontaktformularen</h1>
-<p>Beskederne sendes også til din e-mail. Gamle beskeder slettes automatisk efter to år.</p>
+<p>Beskederne sendes også til din e-mail. Gamle beskeder slettes automatisk efter to år. Formularen frasorterer selv det meste spam.</p>
+
+@if (Model.Beskeder.Count > 0)
+{
+    <div class="knaprad">
+        <form method="post" asp-page-handler="RydSpam" data-bekraeft="Slet alle beskeder, der ligner spam (links, spamord eller fremmed alfabet)?">
+            <button type="submit" class="knap knap-sekundaer">Ryd spam</button>
+        </form>
+        <form method="post" asp-page-handler="SletValgte" id="slet-valgte" data-bekraeft="Slet de markerede beskeder?">
+            <button type="submit" class="knap knap-sekundaer">Slet markerede</button>
+        </form>
+    </div>
+}
 
 @if (Model.Beskeder.Count == 0)
 {
@@ -14,6 +26,7 @@
 @foreach (var b in Model.Beskeder)
 {
     <article class="ramme">
+        <label class="afkryds"><input type="checkbox" name="valgte" value="@b.Id" form="slet-valgte"> <span>Markér</span></label>
         <h2>@(b.Laest ? "" : "Ny: ")@b.Emne</h2>
         <p class="dato-linje">@Tekst.DatoKort(Tekst.DanskTid(b.Oprettet)) kl. @Tekst.DanskTid(b.Oprettet).ToString("HH.mm") – fra @b.Navn, <a href="mailto:@b.Email?subject=Sv: @Uri.EscapeDataString(b.Emne)">@b.Email</a>@(b.Telefon is null ? "" : ", tlf. " + b.Telefon)</p>
         <p>@b.Besked</p>

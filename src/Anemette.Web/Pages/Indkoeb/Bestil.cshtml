@@ -19,7 +19,10 @@
         }
         @if (!ViewData.ModelState.IsValid)
         {
-            <p class="besked besked-fejl" role="alert">Der mangler noget i formularen. Se de røde beskeder herunder.</p>
+            <div class="besked besked-fejl" role="alert">
+                <p>Der mangler noget i formularen. Se de røde beskeder herunder.</p>
+                <div asp-validation-summary="ModelOnly"></div>
+            </div>
         }
 
         <form method="post" novalidate>
@@ -66,6 +69,7 @@
                 </label>
                 <span asp-validation-for="Input.Samtykke" class="felt-fejl"></span>
             </div>
+            <partial name="_Spamvaern" />
             <button type="submit" class="knap">Send bestillingen</button>
         </form>
     </section>

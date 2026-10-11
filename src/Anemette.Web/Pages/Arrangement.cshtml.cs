@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Anemette.Web.Pages;
 
-public class ArrangementModel(AppDbContext db, Mail mail, Indstillinger indstillinger) : PageModel
+[Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("formular")]
+public class ArrangementModel(AppDbContext db, Mail mail, Indstillinger indstillinger, SpamVaern spamVaern) : PageModel
 {
     public Arrangement Arrangement { get; private set; } = null!;
     public int LedigePladser { get; private set; }
@@ -57,6 +58,15 @@ public class ArrangementModel(AppDbContext db, Mail mail, Indstillinger indstill
         {
             ModelState.AddModelError("", "Der er desværre ikke flere ledige pladser.");
             return Page();
+        }
+        switch (spamVaern.Vurder(Request.Form, Input.Navn, Input.Besked))
+        {
+            case SpamVurdering.Robot or SpamVurdering.Indhold:
+                ModelState.AddModelError("", "Formularen kunne ikke sendes. Prøv igen om lidt – eller ring til mig.");
+                break;
+            case SpamVurdering.ForGammel:
+                ModelState.AddModelError("", "Siden har været åben længe. Tryk på knappen igen for at sende.");
+                break;
         }
         if (Input.Antal > LedigePladser)
             ModelState.AddModelError("Input.Antal", $"Der er kun {LedigePladser} ledige pladser.");

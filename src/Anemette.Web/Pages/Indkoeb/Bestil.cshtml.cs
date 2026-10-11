@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Anemette.Web.Pages.Indkoeb;
 
-public class BestilModel(Bestilling bestilling) : PageModel
+[Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("formular")]
+public class BestilModel(Bestilling bestilling, SpamVaern spamVaern) : PageModel
 {
     public List<KurvLinje> Linjer { get; private set; } = [];
     public decimal Total => Linjer.Sum(l => l.Beloeb);
@@ -50,6 +51,15 @@ public class BestilModel(Bestilling bestilling) : PageModel
     {
         Linjer = await bestilling.KurvLinjerAsync();
         if (Linjer.Count == 0) return RedirectToPage("Index");
+        switch (spamVaern.Vurder(Request.Form, Input.Navn, Input.Besked))
+        {
+            case SpamVurdering.Robot or SpamVurdering.Indhold:
+                ModelState.AddModelError("", "Formularen kunne ikke sendes. Prøv igen om lidt – eller ring til mig.");
+                break;
+            case SpamVurdering.ForGammel:
+                ModelState.AddModelError("", "Siden har været åben længe. Tryk på knappen igen for at sende.");
+                break;
+        }
         if (!ModelState.IsValid) return Page();
 
         var (ordre, fejl) = await bestilling.OpretAsync(new Kundeoplysninger(
