@@ -30,6 +30,16 @@ public static class Startdata
         foreach (var (noegle, titel, indhold) in Standardtekster.Sider.Where(s => !sider.Contains(s.Noegle)))
             db.Sider.Add(new Side { Noegle = noegle, Titel = titel, Indhold = Ryk(indhold) });
 
+        foreach (var (noegle, gammel, ny) in Standardtekster.Rettelser)
+        {
+            var side = await db.Sider.FindAsync(noegle);
+            if (side != null && side.Indhold.Contains(gammel, StringComparison.Ordinal))
+            {
+                side.Indhold = side.Indhold.Replace(gammel, ny, StringComparison.Ordinal);
+                side.Opdateret = DateTime.UtcNow;
+            }
+        }
+
         var indstillinger = await db.Indstillinger.Select(i => i.Noegle).ToListAsync();
         foreach (var (noegle, vaerdi) in Standardtekster.Indstillinger.Where(i => !indstillinger.Contains(i.Noegle)))
             db.Indstillinger.Add(new Indstilling { Noegle = noegle, Vaerdi = vaerdi });

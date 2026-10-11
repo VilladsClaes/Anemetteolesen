@@ -96,7 +96,7 @@ public static class Standardtekster
             - **Når du tilmelder dig et arrangement:** navn, e-mail og telefonnummer, så jeg kan kontakte dig om arrangementet. Oplysningerne slettes et år efter arrangementet.
             - **Når du skriver via kontaktformularen:** dit navn, din e-mail, eventuelt telefonnummer og din besked. Beskeden slettes senest to år efter.
 
-            Oplysningerne gemmes krypteret og bruges kun til det, du har givet dem til. De bliver aldrig solgt eller givet videre til andre end dem, der er nødvendige for at sende dine bøger (fx PostNord).
+            Oplysningerne gemmes krypteret og bruges kun til det, du har givet dem til. De bliver aldrig solgt eller givet videre til andre end dem, der er nødvendige for at sende dine bøger (fx PostNord). Mails om bestillinger, tilmeldinger og henvendelser sendes og opbevares i Microsoft 365, som jeg bruger til e-mail.
 
             ## Dine rettigheder
             Du har ret til at få at vide, hvilke oplysninger jeg har om dig, og til at få dem rettet eller slettet. Skriv eller ring til mig, så hjælper jeg. Hvis du er utilfreds med, hvordan dine oplysninger behandles, kan du klage til Datatilsynet (datatilsynet.dk).
@@ -109,6 +109,17 @@ public static class Standardtekster
 
             Der bruges ingen cookies til statistik, reklamer eller sporing, og siden henter ingen indhold fra andre firmaer. Derfor skal du ikke give samtykke til cookies.
             """),
+    ];
+
+    /// <summary>
+    /// Rettelser i teksterne, der allerede ligger i databasen. Findes den gamle formulering stadig,
+    /// erstattes den med den nye; har nogen omskrevet afsnittet i administrationen, røres det ikke.
+    /// </summary>
+    public static readonly (string Noegle, string Gammel, string Ny)[] Rettelser =
+    [
+        ("privatliv",
+            "De bliver aldrig solgt eller givet videre til andre end dem, der er nødvendige for at sende dine bøger (fx PostNord).\n",
+            "De bliver aldrig solgt eller givet videre til andre end dem, der er nødvendige for at sende dine bøger (fx PostNord). Mails om bestillinger, tilmeldinger og henvendelser sendes og opbevares i Microsoft 365, som jeg bruger til e-mail.\n"),
     ];
 
     public static readonly (string Noegle, string Vaerdi)[] Indstillinger =

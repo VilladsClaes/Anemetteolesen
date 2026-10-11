@@ -108,15 +108,6 @@ Log ind som administrator for Microsoft 365-kontoen bag anemetteolesen.dk.
 2. GitHub → **Actions** → **Byg, test og udgiv** → **Run workflow**.
 3. Log ind på `/admin` og klik **Send en testmail**. Fejler den, står Microsofts begrundelse i `logs/stdout*.log` på serveren.
 
-### DKIM og DMARC (beskytter mod falske mails i Anemettes navn)
-
-1. **DKIM**: Gå til <https://security.microsoft.com/authentication?viewid=DKIM> → vælg `anemetteolesen.dk`. Microsoft viser to **CNAME**-poster (`selector1._domainkey` og `selector2._domainkey`). Opret dem i Simply's DNS-zone præcis som vist, vent op til en time, og slå så **Sign messages for this domain with DKIM signatures** til.
-2. **DMARC**: Opret i Simply's DNS-zone:
-   - *Type*: `TXT`, *Hostnavn*: `_dmarc.anemetteolesen.dk`
-   - *Værdi*: `v=DMARC1; p=quarantine; adkim=r; aspf=r`
-
-   `p=quarantine` betyder, at mails, der udgiver sig for at komme fra anemetteolesen.dk uden at gøre det, havner i spam. Når alt har kørt fint en måneds tid, kan værdien skærpes til `p=reject`.
-
 ## Udvikling
 
 Kræver .NET 10 SDK og en MySQL 8-database.
