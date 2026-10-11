@@ -66,19 +66,31 @@ builder.Services.AddScoped<Indstillinger>();
 builder.Services.AddScoped<Kurv>();
 builder.Services.AddScoped<Bestilling>();
 builder.Services.AddScoped<AdminLogin>();
+builder.Services.AddSingleton<SpamVaern>();
 
 // Bogforsider og andre billeder ligger i mappen Uploads ved siden af appen (bevares ved hver udgivelse)
 var uploads = new UploadMappe(Path.GetFullPath(config["Uploads:Mappe"] ?? "Uploads", builder.Environment.ContentRootPath));
 Directory.CreateDirectory(uploads.Sti);
 builder.Services.AddSingleton(uploads);
 
-// Højst 20 login-forsøg pr. 5 minutter fra samme adresse
+// Login: højst 20 forsøg pr. 5 minutter fra samme adresse
 builder.Services.AddRateLimiter(o =>
 {
     o.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     o.AddPolicy("login", ctx => RateLimitPartition.GetFixedWindowLimiter(
         ctx.Connection.RemoteIpAddress?.ToString() ?? "ukendt",
         _ => new FixedWindowRateLimiterOptions { PermitLimit = 20, Window = TimeSpan.FromMinutes(5) }));
+    // Kontakt, bestilling og tilmelding: højst 5 indsendelser pr. 10 minutter fra samme adresse (visninger tæller ikke)
+    o.AddPolicy("formular", ctx => HttpMethods.IsPost(ctx.Request.Method)
+        ? RateLimitPartition.GetFixedWindowLimiter(
+            ctx.Connection.RemoteIpAddress?.ToString() ?? "ukendt",
+            _ => new FixedWindowRateLimiterOptions { PermitLimit = 5, Window = TimeSpan.FromMinutes(10) })
+        : RateLimitPartition.GetNoLimiter("visning"));
+    o.OnRejected = async (ctx, ct) =>
+    {
+        ctx.HttpContext.Response.ContentType = "text/plain; charset=utf-8";
+        await ctx.HttpContext.Response.WriteAsync("Der er sendt for mange formularer på kort tid. Vent et kvarter, og prøv igen – eller ring til mig.", ct);
+    };
 });
 
 // Billeder større end 10 MB afvises

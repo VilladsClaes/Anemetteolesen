@@ -1,0 +1,7 @@
+@inject SpamVaern SpamVaern
+@* Usynlige felter til spambeskyttelse: et tidsstempel og et fælde-felt, som kun robotter udfylder *@
+<input type="hidden" name="@SpamVaern.FeltTid" value="@SpamVaern.NytStempel()">
+<div class="skjult-tekst" aria-hidden="true">
+    <label for="@SpamVaern.FeltFaelde">Lad dette felt være tomt</label>
+    <input type="text" id="@SpamVaern.FeltFaelde" name="@SpamVaern.FeltFaelde" tabindex="-1" autocomplete="off">
+</div>
