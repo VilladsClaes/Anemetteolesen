@@ -69,7 +69,7 @@ public class KontaktModel(AppDbContext db, Mail mail, Indstillinger indstillinge
             {Input.Besked}
 
             (Svar direkte på denne mail for at svare {Input.Navn}.)
-            """, svarTil: Input.Email, afsenderNavn: "Hjemmesiden");
+            """, svarTil: Input.Email);
 
         Besked = "Tak for din besked. Jeg svarer så hurtigt, jeg kan.";
         return RedirectToPage();

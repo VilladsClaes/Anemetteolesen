@@ -1,5 +1,6 @@
 using Anemette.Web.Data;
 using Anemette.Web.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,17 @@ public record BogSalg(string Titel, int Antal, decimal Beloeb);
 public class IndexModel(AppDbContext db, Mail mail) : PageModel
 {
     public bool MailErSatOp => mail.ErSatOp;
+    public string Afsender => mail.Afsender;
+
+    public async Task<IActionResult> OnPostTestmailAsync()
+    {
+        var ok = await mail.SendAsync(mail.Afsender, "Testmail fra hjemmesiden",
+            "Denne mail er sendt fra www.anemetteolesen.dk for at teste, at mailafsendelsen virker.");
+        TempData["AdminBesked"] = ok
+            ? $"Testmailen er sendt til {mail.Afsender}. Tjek indbakken."
+            : "Testmailen kunne ikke sendes. Se fejlen i logs/stdout på serveren, og tjek opsætningen i Microsoft 365.";
+        return RedirectToPage();
+    }
     public int NyeOrdrer { get; private set; }
     public int UlaesteBeskeder { get; private set; }
     public int SolgtIAar { get; private set; }

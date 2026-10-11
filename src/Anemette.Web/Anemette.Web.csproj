@@ -18,7 +18,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.12" />
-    <PackageReference Include="MailKit" Version="4.18.1" />
     <PackageReference Include="Markdig" Version="0.45.0" />
   </ItemGroup>
 

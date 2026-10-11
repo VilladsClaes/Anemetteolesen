@@ -59,10 +59,11 @@ builder.Services.AddAntiforgery(o => o.Cookie.Name = "anemette-sikkerhed");
 builder.Services.Configure<RouteOptions>(o => o.LowercaseUrls = true);
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.Configure<SmtpIndstillinger>(config.GetSection("Smtp"));
+// Mail sendes fra Anemettes Microsoft 365-postkasse via Microsoft Graph
+builder.Services.Configure<GraphIndstillinger>(config.GetSection("Graph"));
+builder.Services.AddHttpClient<Mail>(c => c.Timeout = TimeSpan.FromSeconds(30));
 builder.Services.AddScoped<Indstillinger>();
 builder.Services.AddScoped<Kurv>();
-builder.Services.AddScoped<Mail>();
 builder.Services.AddScoped<Bestilling>();
 builder.Services.AddScoped<AdminLogin>();
 
